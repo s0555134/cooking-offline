@@ -40,7 +40,7 @@ export default new Router({
       path:'/createrecipe',
       component:  CreateRecipe,
       name: 'CreateRecipe',
-      // beforeEnter: AuthGuard
+      beforeEnter: AuthGuard
     },
     {
       path:'/signin',

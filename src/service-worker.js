@@ -48,20 +48,24 @@ workbox.routing.registerRoute(
 workbox.routing.registerNavigationRoute('/index.html');
 
 
-self.addEventListener('sync', event => {
-    console.log('[SW] Background syncing', event);
-    if (event.tag === 'sync-new-posts') {
-        console.log('[SW] Syncing new Posts');
-    }
-});
-
 const matchCb = ({url, event}) => {
     return (url.pathname === '/api/createrecipe');
 };
 
+// const showNotification = () => {
+//     self.registration.showNotification('Post Sent', {
+//         body: 'You are back online and your post was successfully sent!',
+//         icon: 'assets/icon/256.png',
+//         badge: 'assets/icon/32png.png'
+//     });
+// };
+
 
 const bgSyncPlugin = new workbox.backgroundSync.Plugin('createdRecipes-post-storage-offline', {
-    maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
+    maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+    // callbacks: {
+    //     queueDidReplay: showNotification
+    // }
 });
 
 workbox.routing.registerRoute(
