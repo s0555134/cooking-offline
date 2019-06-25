@@ -6,7 +6,7 @@
 
 <script>
 
-    import BaseListItems from '../components/BaseListItems'
+    import BaseListItems from '../components/RecipesList'
     import {mapActions} from 'vuex'
 
     export default {

@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 import Vuetify from 'vuetify'
 import axios from 'axios'
-import * as firebase from 'firebase'
+import * as firebase from 'firebase/app'
 import './registerServiceWorker'
 
 Vue.use(Vuetify);

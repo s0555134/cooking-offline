@@ -114,7 +114,7 @@ export default new Vuex.Store({
                     console.log("Response from Server for create Recipe: ", response);
                 })
                 .catch(error => {
-                    commit('setSnackbar', { text: error.message, color: 'error', snack: true });
+                    commit('setSnackbar', { text: "Your Post will be stored and send by Internet-Connection", color: 'warning', snack: true });
                     console.log(error)
                 });
         },
