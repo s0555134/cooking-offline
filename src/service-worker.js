@@ -52,20 +52,8 @@ const matchCb = ({url, event}) => {
     return (url.pathname === '/api/createrecipe');
 };
 
-const showNotification = () => {
-    self.registration.showNotification('Post Sent', {
-        body: 'You are back online and your post was successfully sent!',
-        icon: 'assets/icon/256.png',
-        badge: 'assets/icon/32png.png'
-    });
-};
-
-
 const bgSyncPlugin = new workbox.backgroundSync.Plugin('createdRecipes-post-storage-offline', {
     maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
-    callbacks: {
-        queueDidReplay: showNotification
-    }
 });
 
 workbox.routing.registerRoute(
@@ -89,4 +77,23 @@ self.addEventListener('notificationclick', event => {
         console.log(action);
         notification.close();
     }
-})
+});
+
+self.addEventListener('push', event => {
+
+    var data = { title: "Default New", content: "Default new Content"};
+
+    if(event.data) {
+        data = JSON.parse(event.data.text());
+    }
+    const options = {
+        body: data.content,
+        icon: "./images/src/assets/notification_icon.png",
+        badge: "./images/src/assets/notification_icon.png",
+        vibrate: [100, 50, 100],
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});

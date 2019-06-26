@@ -16,5 +16,7 @@
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#4DBA87"
+  "theme_color": "#4DBA87",
+  "gcm_sender_id": "160686824759",
+  "applicationServerKey": "AAAAJWmuXTc:APA91bGztAb-zyy1C6bwdP6yRFw6ANzcpiKJ-KPmW1fsixgiFEScfB9o8xppsboEpcFeX12RpohKcTu4i2V7sX1uYwQq_0pqne0ZZF-hpKSybZroXQleQTNwPxwQgI3zxYe38I4TXPKj"
 }

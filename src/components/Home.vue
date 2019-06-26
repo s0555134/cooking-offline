@@ -58,20 +58,19 @@
                           /**Subscription already exist  **/
                       } else {
                           /** Create a new Subscription **/
-                          swReqistration.pushManager.subscribe({
+                          return swReqistration.pushManager.subscribe({
                               userVisibleOnly: true
                           });
                       }
-
                   })
                   .then( newSub => {
-                      return axios.post('/createrecipe', newSub)
+                      return axios.post('/create-subscription', newSub)
                   })
                   .then(() => {
                           this.openNotification();
                   })
                   .catch(err => {
-                      console.log(err);
+                      console.log(err.message);
                       this.$store.commit('setSnackbar', { text: err.message, color:'warning', snack:true });
                   })
 

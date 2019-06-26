@@ -110,7 +110,7 @@ export default new Vuex.Store({
                 .post('/createrecipe', recipes)
                 .then(response => {
                     commit('createRecipes', recipes);
-                    commit('setSnackbar', { text: response.data.status + response.status, color:'success', snack:true });
+                    commit('setSnackbar', { text: "Recipe was created. ( " + response.data.status + response.status + " )", color:'success', snack:true });
                     console.log("Response from Server for create Recipe: ", response);
                 })
                 .catch(error => {
