@@ -47,7 +47,9 @@ export default new Vuex.Store({
 
         objectStoreNameIndexedDB: '',
         dataIndexedDB: '',
-        primaryKeyDB: ''
+        primaryKeyDB: '',
+
+        key: []
     },
     mutations: {
         loadRecipes: (state, payload) => {
@@ -63,6 +65,9 @@ export default new Vuex.Store({
         },
         setUser: (state, payload) => {
             state.user = payload;
+        },
+        saveKey: (state, payload) => {
+            state.key = payload;
         }
     },
     actions: {
@@ -101,17 +106,41 @@ export default new Vuex.Store({
             const recipes = {
                 title: payload.title,
                 name: payload.name,
-                imageURL: payload.imageURL,
                 description: payload.description,
                 ingredients: payload.ingredients,
                 creatorId: getters.user.id
             };
+            let key;
+            let responseDataFromServer;
+            let imageURL;
             axios
                 .post('/createrecipe', recipes)
                 .then(response => {
-                    commit('createRecipes', recipes);
-                    commit('setSnackbar', { text: "Recipe was created. ( " + response.data.status + response.status + " )", color:'success', snack:true });
-                    console.log("Response from Server for create Recipe: ", response);
+                    key = response.data.key;
+                    responseDataFromServer = response;
+                    console.log("Response: ", responseDataFromServer);
+                    commit('saveKey', key);
+                    return key
+                })
+                .then((key) => {
+                    const fileName = payload.image.name;
+                    const extFileName = fileName.slice(fileName.lastIndexOf('.'));
+                    return firebase.storage().ref('recipes/' + key + '.' + extFileName).put(payload.image)
+                })
+                .then(fileData => {
+                    imageURL = fileData.ref.getDownloadURL();
+                    console.log("imageURL: ", imageURL);
+                    console.log("key: ", key);
+                    return firebase.database().ref('recipes').child(key).update({imageURL: imageURL})
+                })
+                .then(() => {
+                    commit('createRecipes', {
+                        ...recipes,
+                        imageURL: imageURL,
+                        id: key
+                    });
+                    commit('setSnackbar', { text: "Recipe was created. ( " + responseDataFromServer.data.status + responseDataFromServer.status + " )", color:'success', snack:true });
+                    console.log("Response from Server for create Recipe: ", responseDataFromServer);
                 })
                 .catch(error => {
                     commit('setSnackbar', { text: "Your Post will be stored and send by Internet-Connection", color: 'warning', snack: true });
@@ -149,7 +178,7 @@ export default new Vuex.Store({
                     };
                     commit('setUser', newUser);
                     commit('setSnackbar', { text: 'User logged in', color:'success', snack:true });
-                    })
+                })
                 .catch(error => {
                     commit('setSnackbar', {text: error.message, color:'error', snack:true });
                 })

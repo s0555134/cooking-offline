@@ -5,8 +5,10 @@ import router from './router'
 import store from './store'
 import Vuetify from 'vuetify'
 import axios from 'axios'
-import * as firebase from 'firebase/app'
-import './registerServiceWorker'
+import * as firebase from 'firebase'
+import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/storage';
 
 Vue.use(Vuetify);
 
@@ -36,6 +38,6 @@ new Vue({
       if(user) {
         this.$store.dispatch('autoSignIn', user)
       }
-    })
+    });
   }
 }).$mount('#app');

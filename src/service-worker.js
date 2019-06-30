@@ -52,8 +52,19 @@ const matchCb = ({url, event}) => {
     return (url.pathname === '/api/createrecipe');
 };
 
+const showNotification = () => {
+    self.registration.showNotification('Post Sent', {
+        body: 'You are back online and your post was successfully sent!',
+        icon: "./images/src/assets/notification_icon.png",
+        badge: "./images/src/assets/notification_icon.png"
+    });
+};
+
 const bgSyncPlugin = new workbox.backgroundSync.Plugin('createdRecipes-post-storage-offline', {
     maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+    // callbacks: {
+    //     queueDidReplay: showNotification
+    // }
 });
 
 workbox.routing.registerRoute(
@@ -75,16 +86,37 @@ self.addEventListener('notificationclick', event => {
         notification.close()
     } else {
         console.log(action);
-        notification.close();
+        let url = "http://localhost:5000";
+        event.waitUntil(
+            clients.matchAll()
+                .then(function (clis) {
+                    var client = clis.find(function (c) {
+                        return c.visibilityState === "visible";
+                    })
+                    if (client !== undefined) {
+                        client.navigate(url);
+                        client.focus();
+                    } else {
+                        clients.openWindow(url)
+                    }
+                    notification.close();
+                })
+        );
     }
 });
 
 self.addEventListener('push', event => {
-
+    console.log("[SW] push event");
     var data = { title: "Default New", content: "Default new Content"};
 
     if(event.data) {
+        console.log("[SW] data: ", data);
+        console.log("[SW] event: ", event);
+        console.log("[SW] data.text: ", event.data.text());
+
         data = JSON.parse(event.data.text());
+        // For those of you who love logging
+        console.log(data);
     }
     const options = {
         body: data.content,

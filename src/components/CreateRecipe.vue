@@ -36,9 +36,15 @@
                                         ></v-text-field>
                                     </v-flex>
                                     <v-flex xs12>
-                                       <v-btn raised class="primary" @click="">Choose Image</v-btn>
-                                        <input type="file" style="display: none" ref="fileInput">
+                                       <v-btn raised class="primary" @click="uploadImage()">Choose Image</v-btn>
+                                        <input type="file" style="display: none" ref="fileInput" accept="image/*" @change="onFilePicked">
                                     </v-flex>
+                                </v-layout>
+                                <v-layout align-center justify-start row fill-height>
+                                    <v-flex xs12 sm6>
+                                        <img :src="imageURL" height="150">
+                                    </v-flex>
+                                </v-layout>
                                     <v-flex xs12>
                                         <v-textarea
                                                 name="description"
@@ -59,7 +65,6 @@
                                                 multiple
                                         ></v-autocomplete>
                                     </v-flex>
-                                </v-layout>
                             </v-container>
                         </v-card-text>
                         <v-card-actions>
@@ -87,83 +92,43 @@
                 title: '',
                 name: '',
                 imageURL: '',
+                image: null,
                 description: '',
                 ingredients: [],
-                indexedDB: ''
             }
         },
         methods: {
-            async initialIndexedDB() {
-                console.log("initialIndexedDB")
-               this.indexedDB = await openDB('posts-store', 1, {
-                    upgrade(db) {
-                        // Create a store of objects
-                        const store = db.createObjectStore('posts', {
-                            // The 'id' property of the object will be the (primary)key.
-                            keyPath: 'id',
-                            autoIncrement: true,
-                        });
-                    }
-                });
-                await this.writeDataIndexedDB('posts');
-            },
-            async writeDataIndexedDB(store, data) {
-                // Add an article:
-                await this.indexedDB.add(store, {
-                    title: 'Article 1',
-                    date: new Date('2019-01-01'),
-                    id: 1,
-                    body: '…',
-                });
-            },
-            async clearAllData(store) {
-                await clear(store)
-            },
             submitRecipesToServer(){
+                if (!this.image) {
+                    this.$store.commit('setSnackbar', { text: "Please add an image of your recipe, before your post.", color:'error', snack:true });
+                    return;
+                }
                 const postRecipeData = {
                     title: this.title,
                     name: this.name,
-                    imageURL: this.imageURL,
+                    image: this.image,
                     description: this.description,
                     ingredients: this.ingredients
                 };
+                console.log(postRecipeData);
                 this.$store.dispatch('createRecipes', postRecipeData);
             },
-            backGroundSync(){
-                if ('serviceWorker' in navigator && 'SyncManager' in window) {
-                    console.log('[SW]&[SyncManger] were found in Browser');
-                    navigator.serviceWorker.getRegistrations()
-                        .then(sw => {
-                            var postRecipeData = {
-                                title: this.title,
-                                name: this.name,
-                                imageURL: this.imageURL,
-                                description: this.description,
-                                ingredients: this.ingredients
-                            };
-                            console.log("<<<<<<<<<< 1")
-                            this.initialIndexedDB('sync-posts', postRecipeData)
-                                .then( () => {
-                                    console.log("<<<<<<<<<< 2")
-                                    return sw.sync.register('sync-new-post');
-                                })
-                                .then( () => {
-                                    console.log("<<<<<<<<<< 3")
-                                    this.$store.commit('setSnackbar', {text: 'Offline-Background-Sync. ' +
-                                            'Will Post if you got Internet Connection.', color:'success', snack:true })
-                                })
-                                .catch(error => {
-                                    this.$store.commit('setSnackbar', {text: error, color:'error', snack:true });
-                                    console.log(error);
-                                })
-                        })
-                        .catch(error =>{
-                            console.log('[SW]&[SyncManger]', error);
-                        })
-                } else {
-                    this.submitRecipesToServer();
-                }
-
+            uploadImage() {
+                this.$refs.fileInput.click()
+            },
+            onFilePicked(event) {
+                const files = event.target.files;
+                let fileName = files[0].name;
+                    if (fileName.match(/\.(png|jpg|jpeg|gif)$/)) {
+                        const fileReader = new FileReader();
+                        fileReader.addEventListener('load', () => {
+                            this.imageURL = fileReader.result
+                        });
+                        fileReader.readAsDataURL(files[0]);
+                        this.image = files[0];
+                    } else {
+                        this.$store.commit('setSnackbar', { text: "Please add only image-files", color:'error', snack:true })
+                    }
             }
         }
     }
