@@ -128,10 +128,12 @@ export default new Vuex.Store({
                     return firebase.storage().ref('recipes/' + key + '.' + extFileName).put(payload.image)
                 })
                 .then(fileData => {
-                    imageURL = fileData.ref.getDownloadURL();
+                  return  imageURL = fileData.ref.getDownloadURL()
+                })
+                .then(imageURL => {
                     console.log("imageURL: ", imageURL);
                     console.log("key: ", key);
-                    return firebase.database().ref('recipes').child(key).update({imageURL: imageURL})
+                    return firebase.database().ref('embedded/recipes').child(key).update(JSON.parse( JSON.stringify({imageURL: imageURL})))
                 })
                 .then(() => {
                     commit('createRecipes', {
