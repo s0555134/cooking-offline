@@ -4,10 +4,11 @@
                 v-model="drawer"
                 absolute
                 temporary
+                app
         >
             <v-list class="pa-1">
                 <v-list-tile-title>
-                    <router-link to="/" tag="span" style="cursor: pointer">Koche - Offline</router-link>
+                    <router-link to="/" tag="span" style="cursor: pointer">Cook-Offline</router-link>
                 </v-list-tile-title>
             </v-list>
             <v-list dense>
@@ -36,7 +37,7 @@
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar color="indigo" dark fixed app >
+        <v-toolbar color="indigo" dark fixed app>
             <v-toolbar-side-icon @click.stop="drawer = !drawer" class="hidden-sm-and-up"></v-toolbar-side-icon>
             <v-toolbar-title>
                 <router-link to="/" tag="span" style="cursor: pointer">Koche - Offline</router-link>
@@ -92,6 +93,7 @@
         methods: {
             onLogout() {
                 this.$store.dispatch('logout');
+                this.$router.push('/signin');
             }
         }
     }

@@ -52,7 +52,6 @@
 </template>
 
 <script>
-    import {mapActions} from 'vuex'
 
     export default {
         name: 'App',
@@ -64,7 +63,7 @@
             password: 'Buch123!',
             passwordRules: [
                 v => !!v || 'Password is required',
-                v => (v && v.length > 6) || 'Password must be bigger than 6 characters'
+                v => (v && v.length > 6) || 'Password must be longer than 6 characters'
             ],
             email: 'uyanik-abdul@hotmail.de',
             emailRules: [
@@ -72,7 +71,6 @@
                 v => /.+@.+/.test(v) || 'E-mail must be valid'
             ],
             select: null,
-
             checkbox: false
         }),
         computed: {
