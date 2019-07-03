@@ -87,7 +87,7 @@
         },
         methods: {
             onSignIn() {
-                this.$store.dispatch('signUserIn', {email: this.email, password: this.password });
+                this.$store.dispatch('signUserIn', { email: this.email, password: this.password });
             }
         }
 

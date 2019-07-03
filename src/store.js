@@ -105,9 +105,9 @@ export default new Vuex.Store({
         createRecipes({commit, getters}, payload) {
             const recipes = {
                 title: payload.title,
-                name: payload.name,
                 description: payload.description,
                 ingredients: payload.ingredients,
+                preparation: payload.preparation,
                 creatorId: getters.user.id
             };
             let key;

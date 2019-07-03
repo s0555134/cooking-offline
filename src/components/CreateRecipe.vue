@@ -7,7 +7,7 @@
         </v-layout>
         <v-layout row wrap>
             <v-flex xs12 pb-5>
-                <v-form @submit.prevent="onSignIn">
+                <v-form ref="form" @submit.prevent="submitRecipesToServer">
                     <v-layout row wrap>
                         <v-flex xs12 sm6 offset-sm3>
                             <v-text-field
@@ -42,15 +42,25 @@
                         </v-flex>
                         <v-flex xs12 sm6 offset-sm3>
                             <v-autocomplete
-                                    :items="['Starter', 'Main-Course', 'Dessert', 'To-Go', 'Vegan']"
-                                    name="category"
+                                    :items="['Starter', 'Main-Course', 'Dessert', 'To-Go', 'Vegan', 'Salad']"
                                     label="Select a Category*"
-                                    :rules="[v => !!v || 'Item is required']"
-                                    v-model.lazy="ingredients"
+                                    :rules="[rules.required]"
+                                    v-model.lazy="category"
                             ></v-autocomplete>
                         </v-flex>
+                        <v-flex xs12 sm6 offset-sm3>
+                            <v-select
+                                    :items="['Sugar', 'Butter', 'Coke', 'Egg', 'Water']"
+                                    label="Ingredients*"
+                                    v-model.lazy="ingredients"
+                                    multiple
+                                    hint="Pick your favorite ingredients"
+                                    persistent-hint
+                                    :rules="[rules.required]"
+                            ></v-select>
+                        </v-flex>
                         <v-flex xs12 sm6 offset-sm3 pt-4>
-                            <v-btn color="primary" @click="submitRecipesToServer()">Save</v-btn>
+                            <v-btn color="primary" type="submit">Save</v-btn>
                         </v-flex>
                     </v-layout>
                 </v-form>
@@ -62,19 +72,15 @@
 <script>
 
     export default {
-        name: 'App',
-        components: {
-        },
         data () {
             return {
-                dialog: false,
                 title: '',
-                name: '',
                 imageURL: '',
                 image: null,
                 description: '',
                 ingredients: [],
                 preparation: '',
+                category: [],
                 rules: {
                     required: value => !!value || 'Required.'
                 }
@@ -82,19 +88,24 @@
         },
         methods: {
             submitRecipesToServer(){
+                if(!this.$refs.form.validate()) {
+                    console.log("asdad");
+                    return;
+                }
                 if (!this.image) {
                     this.$store.commit('setSnackbar', { text: "Please add an image of your recipe, before your post.", color:'error', snack:true });
                     return;
                 }
                 const postRecipeData = {
                     title: this.title,
-                    name: this.name,
                     image: this.image,
                     description: this.description,
-                    ingredients: this.ingredients
+                    ingredients: this.ingredients,
+                    preparation: this.preparation
                 };
                 console.log(postRecipeData);
                 this.$store.dispatch('createRecipes', postRecipeData);
+                this.$router.push('/recipes');
             },
             uploadImage() {
                 this.$refs.fileInput.click()
