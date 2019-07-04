@@ -8,7 +8,7 @@
         >
             <v-list class="pa-1">
                 <v-list-tile-title>
-                    <router-link to="/" tag="span" style="cursor: pointer">Cook-Offline</router-link>
+                    <router-link to="/" tag="span" style="cursor: pointer">Cook Offline</router-link>
                 </v-list-tile-title>
             </v-list>
             <v-list dense>
@@ -40,7 +40,7 @@
         <v-toolbar color="indigo" dark fixed app>
             <v-toolbar-side-icon @click.stop="drawer = !drawer" class="hidden-sm-and-up"></v-toolbar-side-icon>
             <v-toolbar-title>
-                <router-link to="/" tag="span" style="cursor: pointer">Koche - Offline</router-link>
+                <router-link to="/" tag="span" style="cursor: pointer">Cook Offline</router-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-xs-only">
@@ -52,9 +52,10 @@
                     <v-icon left>{{item.icon}}</v-icon>
                     {{item.title}}
                 </v-btn>
-                <v-btn flat
-                       v-if="userIsAuthenticated"
-                       @click="onLogout">
+                <v-btn
+                        flat
+                        v-if="userIsAuthenticated"
+                        @click="onLogout">
                     <v-icon left>exit_to_app</v-icon>
                     Logout
                 </v-btn>
@@ -72,19 +73,20 @@
         },
         computed: {
             toolBarItems() {
-               let toolBarItems = [
-                    {icon: 'face', title:'Sign-up', link: '/signup'},
-                    {icon: 'lock_open', title:'Sign-in', link: '/signin'},
+                let toolBarItems = [
+                    { icon: 'face', title:'Sign-up', link: '/signup' },
+                    { icon: 'lock_open', title:'Sign-in', link: '/signin' },
                 ];
-               if (this.userIsAuthenticated) {
-                   toolBarItems = [
-                       {icon: 'cake', title:'Recipes', link: '/recipes'},
-                       {icon: 'local_pizza', title:'Ingredients', link: '/ingredients'},
-                       {icon: 'category', title:'Categories', link: '/categories'},
-                       {icon: 'cloud_upload', title:'Create-Recipe', link: '/createrecipe'},
-                   ];
-               }
-               return toolBarItems;
+                if (this.userIsAuthenticated) {
+                    toolBarItems = [
+                        { icon: 'cake', title:'Recipes', link: '/recipes' },
+                        { icon: 'cake', title:'My-Recipe', link: '/recipe/:id' },
+                        { icon: 'local_pizza', title:'Ingredients', link: '/ingredients' },
+                        { icon: 'category', title:'Categories', link: '/categories' },
+                        { icon: 'cloud_upload', title:'Create-Recipe', link: '/createrecipe' },
+                    ];
+                }
+                return toolBarItems;
             },
             userIsAuthenticated() {
                 return this.$store.getters.user !== null && this.$store.getters.user !== undefined;
@@ -98,8 +100,3 @@
         }
     }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>

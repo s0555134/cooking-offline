@@ -9,7 +9,7 @@
             <v-flex
                 v-for="item in loadRecipes"
                 :key="item.title"
-                xs12 md4 px-2
+                xs12 md4 px-2 pb-3
             >
                 <v-item-group>
                     <v-item>
@@ -36,7 +36,11 @@
                                 </v-card-text>
                             </v-slide-y-transition>
                             <v-card-actions>
-                                <v-btn text>Open Recipe</v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue lighten-1" dark :to="/recipe/ + item.id">
+                                    <v-icon dark left>arrow_forward</v-icon>
+                                        Open Recipe
+                                </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-item>

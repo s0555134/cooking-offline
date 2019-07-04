@@ -7,6 +7,7 @@ import Categories from "./views/Categories";
 import CreateRecipe from "./components/CreateRecipe";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import Recipe from "./components/Recipe";
 import AuthGuard from "./auth-guard";
 
 Vue.use(Router);
@@ -40,6 +41,13 @@ export default new Router({
       path:'/createrecipe',
       component:  CreateRecipe,
       name: 'CreateRecipe',
+      beforeEnter: AuthGuard
+    },
+    {
+      path:'/recipe/:id',
+      component:  Recipe,
+      props: true,
+      name: 'Recipe',
       beforeEnter: AuthGuard
     },
     {

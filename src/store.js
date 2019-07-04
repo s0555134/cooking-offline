@@ -3,26 +3,6 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { openDB, deleteDB, wrap, unwrap } from 'idb';
-
-
-async function writeDataIndexedDB(st, data) {
-    const tx = db.transaction(st, 'readwrite');
-    const store = tx.objectStore(st);
-    const val = await store.get('counter') || 0;
-    store.put(val + 1, 'counter');
-    await tx.done;
-}
-
-function writeData(st, data) {
-    return dbPromise
-        .then(function(db) {
-            var tx = db.transaction(st, 'readwrite');
-            var store = tx.objectStore(st);
-            store.put(data);
-            return tx.complete;
-        });
-}
 
 
 Vue.use(Vuex);
@@ -78,8 +58,15 @@ export default new Vuex.Store({
                     let responseData = response.data.recipes;
                     let resultArrayRecipes = [];
                     for (let index in responseData) {
-                        resultArrayRecipes.push(responseData[index]);
-                        // console.log( uid)
+                        resultArrayRecipes.push({
+                            id: responseData[index].id,
+                            title: responseData[index].title,
+                            imageURL: responseData[index].imageURL,
+                            description: responseData[index].description,
+                            ingredients: responseData[index].ingredients,
+                            preparation: responseData[index].preparation,
+                            creatorId: responseData[index].creatorId
+                        });
                     }
                     console.log(response.data);
                     commit('loadRecipes', resultArrayRecipes);
@@ -202,6 +189,13 @@ export default new Vuex.Store({
         },
         user(state) {
             return state.user;
+        },
+        loadRecipe(state) {
+          return(recipesId) => {
+              return state.loadedRecipes.find((loadedRecipes) => {
+                  return loadedRecipes.id === recipesId
+              })
+          }
         },
         loadDialog(state){
             return state.dialog;
