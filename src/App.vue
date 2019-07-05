@@ -22,7 +22,7 @@
             headerNavigationBar,
             my_footer,
             snackbar,
-            dialogProgressbar
+            dialogProgressbar,
         }
     }
 </script>

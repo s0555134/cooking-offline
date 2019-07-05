@@ -65,6 +65,7 @@ export default new Vuex.Store({
                             description: responseData[index].description,
                             ingredients: responseData[index].ingredients,
                             preparation: responseData[index].preparation,
+                            category: responseData[index].category,
                             creatorId: responseData[index].creatorId
                         });
                     }
@@ -95,6 +96,7 @@ export default new Vuex.Store({
                 description: payload.description,
                 ingredients: payload.ingredients,
                 preparation: payload.preparation,
+                category: payload.category,
                 creatorId: getters.user.id
             };
             let key;

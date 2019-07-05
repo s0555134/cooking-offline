@@ -44,7 +44,7 @@
                 })
             },
             handlePushSubscription() {
-              if (!("serviceWorker" in navigator)) {
+              if (!('serviceWorker' in navigator && 'SyncManager' in window)) {
                   return;
               }
               var swReqistration;

@@ -9,10 +9,12 @@ import * as firebase from 'firebase'
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
+import editRecipe from './components/EditRecipe'
 
 Vue.use(Vuetify);
 
 Vue.config.productionTip = false;
+Vue.component('edit-recipe', editRecipe);
 
 axios.defaults.baseURL = 'http://localhost:3000/api';
 axios.defaults.headers.common['Accepts'] = 'application/json';

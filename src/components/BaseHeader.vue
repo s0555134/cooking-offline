@@ -80,8 +80,7 @@
                 if (this.userIsAuthenticated) {
                     toolBarItems = [
                         { icon: 'cake', title:'Recipes', link: '/recipes' },
-                        { icon: 'cake', title:'My-Recipe', link: '/recipe/:id' },
-                        { icon: 'local_pizza', title:'Ingredients', link: '/ingredients' },
+                        { icon: 'local_pizza', title:'My-Recipe', link: '/recipe/:id' },
                         { icon: 'category', title:'Categories', link: '/categories' },
                         { icon: 'cloud_upload', title:'Create-Recipe', link: '/createrecipe' },
                     ];

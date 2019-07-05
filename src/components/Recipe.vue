@@ -28,10 +28,10 @@
                         </v-card-text>
                     </v-slide-y-transition>
                     <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn fab dark color="cyan">
-                            <v-icon dark>edit</v-icon>
-                        </v-btn>
+                        <template v-if="checkUserIsCreatorOfRecipe">
+                            <v-spacer></v-spacer>
+                            <edit-recipe :recipe="recipe"></edit-recipe>
+                        </template>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
     export default {
         props: ['id'],
         data() {
@@ -51,6 +50,15 @@
         computed : {
             recipe() {
                 return this.$store.getters.loadRecipe(this.id)
+            },
+            userIsAuthenticated() {
+                return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+            },
+            checkUserIsCreatorOfRecipe() {
+                if (!this.userIsAuthenticated) {
+                    return false
+                }
+                return this.$store.getters.user.id === this.recipe.creatorId
             }
         },
         mounted() {

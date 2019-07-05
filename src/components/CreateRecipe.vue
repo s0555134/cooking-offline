@@ -33,7 +33,6 @@
                         </v-flex>
                         <v-flex xs12 sm6 offset-sm3>
                             <v-textarea
-                                    v-model="preparation"
                                     label="Preparation"
                                     :rules="[rules.required]"
                                     hint="Type your ingredients"
@@ -42,7 +41,7 @@
                         </v-flex>
                         <v-flex xs12 sm6 offset-sm3>
                             <v-autocomplete
-                                    :items="['Starter', 'Main-Course', 'Dessert', 'To-Go', 'Vegan', 'Salad']"
+                                    :items="itemsCategory"
                                     label="Select a Category*"
                                     :rules="[rules.required]"
                                     v-model.lazy="category"
@@ -50,7 +49,7 @@
                         </v-flex>
                         <v-flex xs12 sm6 offset-sm3>
                             <v-select
-                                    :items="['Sugar', 'Butter', 'Coke', 'Egg', 'Water']"
+                                    :items="itemsIngredients"
                                     label="Ingredients*"
                                     v-model.lazy="ingredients"
                                     multiple
@@ -81,6 +80,8 @@
                 ingredients: [],
                 preparation: '',
                 category: [],
+                itemsCategory: ['Starter' , 'Main Course' , 'Dessert' , 'To Go' , 'Vegan' , 'Salad'],
+                itemsIngredients: ['Sugar', 'Butter', 'Coke', 'Egg', 'Water'],
                 rules: {
                     required: value => !!value || 'Required.'
                 }
