@@ -7,7 +7,7 @@
         </v-layout>
         <v-container>
             <v-layout row class="pt-5">
-                <v-flex xs12 sm6 offset-sm3>
+                <v-flex xs12 md6 sm4 offset-sm3>
                     <v-card>
                         <v-card-text>
                             <v-container>

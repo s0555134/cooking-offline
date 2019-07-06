@@ -102,11 +102,12 @@
                     image: this.image,
                     description: this.description,
                     ingredients: this.ingredients,
+                    category: this.category,
                     preparation: this.preparation
                 };
-                console.log(postRecipeData);
+                console.log("CreateRecipe: ", postRecipeData);
                 this.$store.dispatch('createRecipes', postRecipeData);
-                this.$router.push('/recipes');
+                // this.$router.push('/recipes');
             },
             uploadImage() {
                 this.$refs.fileInput.click()

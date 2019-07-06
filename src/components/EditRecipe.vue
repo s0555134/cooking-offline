@@ -15,19 +15,19 @@
                         <v-flex xs12>
                             <v-text-field
                                     label="title"
-                                    v-model="recipe.title"
+                                    v-model="editedTitle"
                             ></v-text-field>
                         </v-flex>
                         <v-flex xs12 >
                             <v-textarea
                                     label="Description"
-                                    v-model="recipe.description"
+                                    v-model="editedDescription"
                             ></v-textarea>
                         </v-flex>
                         <v-flex xs12>
                             <v-textarea
                                     label="Preparation"
-                                    v-model="recipe.preparation"
+                                    v-model="editedPreparation"
                             ></v-textarea>
                         </v-flex>
                         <v-flex xs12 sm6 md6>
@@ -53,7 +53,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" flat @click="dialog = false">Cancel</v-btn>
-                <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+                <v-btn color="blue darken-1" flat @click="dialog = false; saveEdits()">Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -65,12 +65,25 @@
         data() {
             return {
                 dialog: false,
+                editedTitle: this.recipe.title,
+                editedDescription: this.recipe.description,
+                editedPreparation: this.recipe.preparation,
                 itemsCategory: this.recipe.itemsCategory,
                 itemsIngredients: this.recipe.itemsIngredients
             }
         },
         mounted() {
             console.log(this.recipe);
+        },
+        methods: {
+            saveEdits() {
+                this.$store.dispatch('updateRecipe', {
+                    id: this.recipe.id,
+                    title: this.editedTitle,
+                    description: this.editedDescription,
+                    preparation: this.editedPreparation
+                })
+            }
         }
     }
 </script>

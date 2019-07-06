@@ -7,6 +7,18 @@
         </v-layout>
         <v-layout row wrap class="pt-3 pb-5">
             <v-flex xs12 md8 lg8 px-2>
+                <div class="text-xs-center">
+                    <v-progress-circular
+                            v-if="loading"
+                            :size="50"
+                            color="primary"
+                            indeterminate
+                    ></v-progress-circular>
+                </div>
+            </v-flex>
+        </v-layout>
+        <v-layout row wrap class="pt-3 pb-5">
+            <v-flex xs12 md8 lg8 px-2>
                 <v-card class="align-center">
                     <v-img
                             :src="recipe.imageURL"
@@ -62,7 +74,7 @@
             }
         },
         mounted() {
-            console.log("Recipe-solo: ",this.recipe);
+            console.log("Recipe-solo: ", this.recipe);
             console.log("Recipe-solo: ", this.id);
         }
     }
