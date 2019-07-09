@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
 import editRecipe from './components/EditRecipe'
+import './registerServiceWorker'
 
 Vue.use(Vuetify);
 

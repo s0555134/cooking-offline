@@ -56,6 +56,7 @@
                   .then(sub => {
                       if (sub) {
                           /**Subscription already exist  **/
+                          console.log("Sub already exist: ", sub);
                       } else {
                           /** Create a new Subscription **/
                           return swReqistration.pushManager.subscribe({
@@ -64,6 +65,7 @@
                       }
                   })
                   .then( newSub => {
+                      console.log("Subscription: ",newSub);
                       return axios.post('/create-subscription', newSub)
                   })
                   .then(() => {

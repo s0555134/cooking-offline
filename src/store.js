@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import router from './router'
 
 
 Vue.use(Vuex);
@@ -40,9 +41,9 @@ export default new Vuex.Store({
             state.loadedOwnRecipes.push(payload);
         },
         updateRecipe: (state, payload) => {
-          let recipe = state.loadedRecipes;
-          for (let index in recipe) {
-              if (recipe[index].id === payload.id) {
+            let recipe = state.loadedRecipes;
+            for (let index in recipe) {
+                if (recipe[index].id === payload.id) {
                     if (payload.title) {
                         recipe.title = payload.title
                     }
@@ -52,10 +53,10 @@ export default new Vuex.Store({
                     if (payload.preparation) {
                         recipe.preparation = payload.preparation
                     }
-              }
-          }
-          console.log("Store: ", recipe);
-          console.log("Store: ", payload);
+                }
+            }
+            console.log("Store: ", recipe);
+            console.log("Store: ", payload);
         },
         setUser: (state, payload) => {
             state.user = payload;
@@ -64,11 +65,12 @@ export default new Vuex.Store({
             state.key = payload;
         },
         setLoading (state, payload) {
-            state.loading = payload;
+            state.loadingProgress = payload;
         }
     },
     actions: {
         loadRecipes({ commit, getters }, payload) {
+            commit('setLoading', true);
             axios
                 .get('/recipes')
                 .then(response => {
@@ -88,6 +90,7 @@ export default new Vuex.Store({
                     }
                     console.log(response.data);
                     commit('loadRecipes', resultArrayRecipes);
+                    commit('setLoading', false);
                 })
                 .catch(function (error) {
                     commit('setLoading', false);
@@ -120,20 +123,38 @@ export default new Vuex.Store({
                 creatorId: getters.user.id
             };
             let key;
-            let responseDataFromServer;
             let imageURL;
             axios
                 .post('/createrecipe', recipes)
                 .then(response => {
                     key = response.data.key;
-                    responseDataFromServer = response;
-                    console.log("Response: ", responseDataFromServer);
+                    commit('setSnackbar', { text: "Recipe was created. ( " + response.data.status  + " )", color:'success', snack:true });
+                    console.log("Response from Server for create Recipe: ", response);
                     commit('saveKey', key);
                     return key
                 })
+                .then(key => {
+                    const fileName = payload.image.name;
+                    const extFileName = fileName.slice(fileName.lastIndexOf('.'));
+                    return firebase.storage().ref('recipes/' + key + '.' + extFileName).put(payload.image)
+                })
+                .then(fileData => {
+                  return imageURL = fileData.ref.getDownloadURL()
+                })
+                .then(imageURL => {
+                    console.log("imageURL: ", imageURL);
+                    console.log("key: ", key);
+                    return firebase.database().ref('embedded/recipes').child(key).update(JSON.parse( JSON.stringify({imageURL: imageURL})))
+                })
+                .then(() => {
+                    commit('createRecipes', {
+                        ...recipes,
+                        imageURL: imageURL,
+                        id: key
+                    });
+                })
                 .catch(error => {
-                    commit('setSnackbar', { text: "Your Post will be stored and send by Internet-Connection", color: 'warning', snack: true });
-                    commit('setLoading', false);
+                    commit('setSnackbar', { text: "Your Post will be stored and uploaded by Internet-Connection", color: 'warning', snack: true });
                     if (error.response) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
@@ -150,29 +171,6 @@ export default new Vuex.Store({
                         console.log('Error', error.message);
                     }
                 })
-                .then((key) => {
-                    const fileName = payload.image.name;
-                    const extFileName = fileName.slice(fileName.lastIndexOf('.'));
-                    return firebase.storage().ref('recipes/' + key + '.' + extFileName).put(payload.image)
-                })
-                .then(fileData => {
-                  return  imageURL = fileData.ref.getDownloadURL()
-                })
-                .then(imageURL => {
-                    console.log("imageURL: ", imageURL);
-                    console.log("key: ", key);
-                    return firebase.database().ref('embedded/recipes').child(key).update(JSON.parse( JSON.stringify({imageURL: imageURL})))
-                })
-                .then(() => {
-                    commit('createRecipes', {
-                        ...recipes,
-                        imageURL: imageURL,
-                        id: key
-                    });
-                    commit('setSnackbar', { text: "Recipe was created. ( " + responseDataFromServer.data.status + responseDataFromServer.status + " )", color:'success', snack:true });
-                    console.log("Response from Server for create Recipe: ", responseDataFromServer);
-                })
-
         },
         updateRecipe({commit}, payload) {
             commit('setLoading', true);
@@ -190,11 +188,13 @@ export default new Vuex.Store({
                 .put('/recipes/' + payload.id, editedRecipe)
                 .then(response => {
                     commit('updateRecipe', editedRecipe);
-                    commit('setSnackbar', { text: "Recipe has been updated.", color:'success', snack:true });
                     commit('setLoading', false);
+                    commit('setSnackbar', { text: editedRecipe.title, color:'success', snack:true });
+                    router.push('/recipes')
                 })
                 .catch(error => {
                     commit('setLoading', false);
+                    commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
                     if (error.response) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
@@ -315,21 +315,21 @@ export default new Vuex.Store({
         loadRecipes(state){
             return state.loadedRecipes;
         },
-        loadIngredients(state){
-            return state.loadedIngredients;
-        },
         user(state) {
             return state.user;
         },
         loadRecipe(state) {
-          return(recipesId) => {
-              return state.loadedRecipes.find((loadedRecipes) => {
-                  return loadedRecipes.id === recipesId
-              })
-          }
+            return(recipesId) => {
+                return state.loadedRecipes.find((loadedRecipes) => {
+                    return loadedRecipes.id === recipesId
+                })
+            }
         },
         loadDialog(state){
             return state.dialog;
-        }
+        },
+        loading (state) {
+            return state.loadingProgress
+        },
     }
 })

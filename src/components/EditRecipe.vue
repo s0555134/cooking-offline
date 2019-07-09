@@ -83,6 +83,7 @@
                     description: this.editedDescription,
                     preparation: this.editedPreparation
                 })
+                this.$router.push('/recipes');
             }
         }
     }

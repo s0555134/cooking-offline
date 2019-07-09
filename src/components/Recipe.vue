@@ -1,15 +1,10 @@
 <template>
     <v-container class="pt-5">
-        <v-layout row wrap>
-            <v-flex xs 12>
-                <h1 class="primary--text pt-3">My Recipe</h1>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap class="pt-3 pb-5">
+        <v-layout   v-if="loading"
+                    row wrap class="pt-5 pb-5">
             <v-flex xs12 md8 lg8 px-2>
                 <div class="text-xs-center">
                     <v-progress-circular
-                            v-if="loading"
                             :size="50"
                             color="primary"
                             indeterminate
@@ -17,7 +12,12 @@
                 </div>
             </v-flex>
         </v-layout>
-        <v-layout row wrap class="pt-3 pb-5">
+        <v-layout v-if = "!loading" row wrap>
+            <v-flex xs 12>
+                <h1 class="primary--text pt-3">My Recipe</h1>
+            </v-flex>
+        </v-layout>
+        <v-layout v-if="!loading" row wrap class="pt-3 pb-5">
             <v-flex xs12 md8 lg8 px-2>
                 <v-card class="align-center">
                     <v-img
@@ -25,17 +25,15 @@
                             height="400px"
                     />
                     <v-card-title primary-title>
-                        <div>
-                            <div class="headline">{{ recipe.title }}</div>
-                            <span class="grey--text">{{ recipe.preparation}}</span>
-                        </div>
+                            <div class="headline text-truncate">{{ recipe.title }}</div>
+                            <span class="grey--text text-truncate">{{ recipe.preparation}}</span>
                     </v-card-title>
                     <v-card-text class="text-truncate">{{ recipe.description}}</v-card-text>
                     <v-btn icon @click="show = !show">
                         <v-icon>{{ show ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</v-icon>
                     </v-btn>
                     <v-slide-y-transition>
-                        <v-card-text v-show="show">
+                        <v-card-text v-show="show" class="text-truncate">
                             {{recipe.description}}
                         </v-card-text>
                     </v-slide-y-transition>
@@ -71,6 +69,9 @@
                     return false
                 }
                 return this.$store.getters.user.id === this.recipe.creatorId
+            },
+            loading () {
+                return this.$store.getters.loading
             }
         },
         mounted() {
