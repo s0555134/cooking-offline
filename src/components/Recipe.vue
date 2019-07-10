@@ -25,9 +25,9 @@
                             height="400px"
                     />
                     <v-card-title primary-title>
-                            <div class="headline text-truncate">{{ recipe.title }}</div>
-                            <span class="grey--text text-truncate">{{ recipe.preparation}}</span>
+                        <div class="headline text-truncate">{{ recipe.title }}</div>
                     </v-card-title>
+                    <v-card-text class="grey--text text-truncate">{{ recipe.preparation}}</v-card-text>
                     <v-card-text class="text-truncate">{{ recipe.description}}</v-card-text>
                     <v-btn icon @click="show = !show">
                         <v-icon>{{ show ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</v-icon>

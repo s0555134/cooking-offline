@@ -77,7 +77,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    new RegExp("^/api/recipes/.*$"),
+    /api\/recipe\/-[^\s]+/,
     workbox.strategies.networkOnly({
         plugins: [bgSyncPlugin]
     }),
@@ -124,8 +124,6 @@ self.addEventListener('push', event => {
         console.log("[SW] data.text: ", event.data.text());
 
         data = JSON.parse(event.data.text());
-        // For those of you who love logging
-        console.log(data);
     }
     const options = {
         body: data.content,

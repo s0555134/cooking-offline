@@ -59,7 +59,7 @@
                             ></v-select>
                         </v-flex>
                         <v-flex xs12 sm6 offset-sm3 pt-4>
-                            <v-btn color="primary" type="submit">Save</v-btn>
+                            <v-btn color="primary" type="submit" :loading="buttonLoadingState">Save</v-btn>
                         </v-flex>
                     </v-layout>
                 </v-form>
@@ -82,6 +82,7 @@
                 category: [],
                 itemsCategory: ['Starter' , 'Main Course' , 'Dessert' , 'To Go' , 'Vegan' , 'Salad'],
                 itemsIngredients: ['Sugar', 'Butter', 'Coke', 'Egg', 'Water'],
+                buttonLoadingState: false,
                 rules: {
                     required: value => !!value || 'Required.'
                 }
@@ -89,12 +90,14 @@
         },
         methods: {
             submitRecipesToServer(){
+                this.buttonLoadingState = true;
                 if(!this.$refs.form.validate()) {
-                    console.log("asdad");
+                    this.buttonLoadingState = false;
                     return;
                 }
                 if (!this.image) {
                     this.$store.commit('setSnackbar', { text: "Please add an image of your recipe, before your post.", color:'error', snack:true });
+                    this.buttonLoadingState = false;
                     return;
                 }
                 const postRecipeData = {
@@ -106,8 +109,11 @@
                     preparation: this.preparation
                 };
                 console.log("CreateRecipe: ", postRecipeData);
-                this.$store.dispatch('createRecipes', postRecipeData);
-                // this.$router.push('/recipes');
+                this.$store.dispatch('createRecipes', postRecipeData)
+                    .then(() => {
+                        this.buttonLoadingState = false;
+                        // this.$router.push('/recipes');
+                    });
             },
             uploadImage() {
                 this.$refs.fileInput.click()
