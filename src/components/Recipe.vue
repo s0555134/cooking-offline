@@ -1,6 +1,6 @@
 <template>
     <v-container class="pt-5">
-        <v-layout   v-if="loading"
+        <v-layout   v-if="loadingDataBeforeRenderingRecipes"
                     row wrap class="pt-5 pb-5">
             <v-flex xs12 md8 lg8 px-2>
                 <div class="text-xs-center">
@@ -12,18 +12,15 @@
                 </div>
             </v-flex>
         </v-layout>
-        <v-layout v-if = "!loading" row wrap>
+        <v-layout v-if = "!loadingDataBeforeRenderingRecipes" row wrap>
             <v-flex xs 12>
                 <h1 class="primary--text pt-3">My Recipe</h1>
             </v-flex>
         </v-layout>
-        <v-layout v-if="!loading" row wrap class="pt-3 pb-5">
+        <v-layout v-if="!loadingDataBeforeRenderingRecipes" row wrap class="pt-3 pb-5">
             <v-flex xs12 md8 lg8 px-2>
                 <v-card class="align-center">
-                    <v-img
-                            :src="recipe.imageURL"
-                            height="400px"
-                    />
+                    <v-img :src="recipe.imageURL" height="400px"/>
                     <v-card-title primary-title>
                         <div class="headline text-truncate">{{ recipe.title }}</div>
                     </v-card-title>
@@ -70,13 +67,13 @@
                 }
                 return this.$store.getters.user.id === this.recipe.creatorId
             },
-            loading () {
+            loadingDataBeforeRenderingRecipes() {
                 return this.$store.getters.loading
             }
         },
         mounted() {
             console.log("Recipe-solo: ", this.recipe);
-            console.log("Recipe-solo: ", this.id);
+            console.log("Recipe-solo-dbKey: ", this.id);
         }
     }
 </script>

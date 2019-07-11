@@ -3,10 +3,20 @@
        <v-container>
            <v-layout row class="pt-5">
                <v-flex xs12 sm6 offset-sm3>
-                   <v-card>
+                   <v-card class="elevation-20">
                        <v-card-text>
                            <v-container>
                                <form @submit.prevent="onSignup">
+                                   <v-layout row>
+                                       <v-flex xs12>
+                                           <v-text-field
+                                                   v-model.lazy="displayName"
+                                                   :rules="displayNameRules"
+                                                   label="Name"
+                                                   required
+                                           ></v-text-field>
+                                       </v-flex>
+                                   </v-layout>
                                    <v-layout row>
                                        <v-flex xs12>
                                            <v-text-field
@@ -67,6 +77,11 @@
         },
         data: () => ({
             valid: true,
+            displayName: '',
+            displayNameRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length > 1) || 'Set your name before continue'
+            ],
             password: '',
             passwordRules: [
                 v => !!v || 'Password is required',
@@ -99,7 +114,7 @@
         },
         methods: {
             onSignup() {
-                    this.$store.dispatch('signUserUp', {email: this.email, password: this.password });
+                    this.$store.dispatch('signUserUp', { displayName: this.displayName, email: this.email, password: this.password });
             }
         }
 

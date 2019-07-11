@@ -48,7 +48,6 @@ export default new Router({
       component:  Recipe,
       props: true,
       name: 'Recipe',
-      beforeEnter: AuthGuard
     },
     {
       path:'/signin',

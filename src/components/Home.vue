@@ -50,6 +50,7 @@
               var swReqistration;
               navigator.serviceWorker.getRegistration()
                   .then(swReq => {
+                      swReq.precacheStaticFiles();
                       swReqistration = swReq;
                       return swReq.pushManager.getSubscription()
                   })
@@ -66,7 +67,9 @@
                   })
                   .then( newSub => {
                       console.log("Subscription: ",newSub);
-                      return axios.post('/create-subscription', newSub)
+                      if(newSub) {
+                          return axios.post('/create-subscription', newSub)
+                      }
                   })
                   .then(() => {
                           this.openNotification();
