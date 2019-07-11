@@ -18,7 +18,7 @@
             </v-flex>
         </v-layout>
         <v-layout v-if="!loadingDataBeforeRenderingRecipes" row wrap class="pt-3 pb-5">
-            <v-flex xs12 md8 lg8 px-2>
+            <v-flex xs12 md9 lg8 px-2 offset-xs1>
                 <v-card class="align-center">
                     <v-img :src="recipe.imageURL" height="400px"/>
                     <v-card-title primary-title>

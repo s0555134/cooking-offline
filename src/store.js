@@ -22,7 +22,7 @@ export default new Vuex.Store({
         user: null,
 
         loadingProgress: false,
-
+        loadingButtonState: false,
         loadingRequest: false,
         error: null,
 
@@ -66,7 +66,11 @@ export default new Vuex.Store({
         },
         setLoading (state, payload) {
             state.loadingProgress = payload;
-        }
+        },
+        setButtonLoading (state, payload) {
+            state.loadingButtonState = payload;
+        },
+
     },
     actions: {
         loadRecipes({ commit, getters }, payload) {
@@ -114,6 +118,7 @@ export default new Vuex.Store({
                 });
         },
         createRecipes({commit, getters}, payload) {
+            commit('setButtonLoading', true);
             const recipes = {
                 title: payload.title,
                 description: payload.description,
@@ -131,6 +136,7 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: "Recipe was created. ( " + response.data.status + " )", color:'success', snack:true });
                     console.log("Response from Server for create Recipe: ", response);
                     commit('saveKey', dbKey);
+                    commit('setButtonLoading', false);
                     return dbKey
                 })
                 .then(key => {
@@ -154,6 +160,7 @@ export default new Vuex.Store({
                     });
                 })
                 .catch(error => {
+                    commit('setButtonLoading', false);
                     commit('setSnackbar', { text: "Your Post will be stored and uploaded by Internet-Connection", color: 'warning', snack: true });
                     if (error.response) {
                         // The request was made and the server responded with a status code
@@ -174,6 +181,7 @@ export default new Vuex.Store({
         },
         updateRecipe({commit}, payload) {
             commit('setLoading', true);
+            commit('setButtonLoading', true);
             let editedRecipe = {};
             if (payload.title) {
                 editedRecipe.title = payload.title
@@ -189,10 +197,12 @@ export default new Vuex.Store({
                 .then(response => {
                     commit('updateRecipe', editedRecipe);
                     commit('setLoading', false);
+                    commit('setButtonLoading', false);
                     commit('setSnackbar', { text:"Your recipe: " + editedRecipe.title + " has been changed.", color:'success', snack:true });
                     router.push('/recipes')
                 })
                 .catch(error => {
+                    commit('setButtonLoading', false);
                     commit('setLoading', false);
                     commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
                     if (error.response) {
@@ -266,11 +276,11 @@ export default new Vuex.Store({
                 .then(user => {
                     const newUser = {
                         id: user.user.uid,
-                        name: user.user.displayName,
+                        displayName: user.user.displayName,
                         registeredRecipes: []
                     };
                     commit('setUser', newUser);
-                    commit('setSnackbar', { text: 'Welcome back ' + newUser.name + " .", color:'success', snack:true });
+                    commit('setSnackbar', { text: 'Welcome back ' + newUser.displayName, color:'success', snack:true });
                 })
                 .catch(error => {
                     if (error.response) {
@@ -326,8 +336,11 @@ export default new Vuex.Store({
         loadDialog(state){
             return state.dialog;
         },
-        loading (state) {
+        loading(state) {
             return state.loadingProgress
+        },
+        loadingButtonState(state) {
+            return state.loadingButtonState
         },
     }
 })

@@ -82,7 +82,6 @@
                 category: [],
                 itemsCategory: ['Starter' , 'Main Course' , 'Dessert' , 'To Go' , 'Vegan' , 'Salad'],
                 itemsIngredients: ['Sugar', 'Butter', 'Coke', 'Egg', 'Water'],
-                buttonLoadingState: false,
                 rules: {
                     required: value => !!value || 'Required.'
                 }
@@ -132,6 +131,12 @@
                     this.$store.commit('setSnackbar', { text: "Please add only image-files", color:'error', snack:true })
                 }
             }
-        }
+        },
+        computed : {
+            buttonLoadingState() {
+                console.log("buttonLoadingState(): ", this.$store.getters);
+                return this.$store.getters.loadingButtonState
+            }
+        },
     }
 </script>

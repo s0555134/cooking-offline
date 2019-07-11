@@ -17,6 +17,7 @@ Vue.component('edit-recipe', editRecipe);
 
 axios.defaults.baseURL = 'http://localhost:3000/api';
 axios.defaults.headers.common['Accepts'] = 'application/json';
+axios.defaults.timeout = 6000;
 
 new Vue({
     router,
