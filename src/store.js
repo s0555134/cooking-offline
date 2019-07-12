@@ -205,7 +205,7 @@ export default new Vuex.Store({
                     commit('updateRecipe', editedRecipe);
                     commit('setLoadingRecipes', false);
                     commit('setButtonLoading', false);
-                    commit('setSnackbar', { text:"Your recipe: " + editedRecipe.title + " has been changed.", color:'success', snack:true });
+                    commit('setSnackbar', { text:"Your recipe has been changed.", color:'success', snack:true });
                     router.push('/recipes')
                 })
                 .catch(error => {
@@ -218,13 +218,11 @@ export default new Vuex.Store({
                         console.log(error.response.data);
                         console.log(error.response.status);
                         console.log(error.response.headers);
-                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
                     } else if (error.request) {
                         // The request was made but no response was received
                         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                         // http.ClientRequest in node.js
                         console.log(error.request);
-                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
                     } else {
                         // Something happened in setting up the request that triggered an Error
                         console.log('Error', error.message);

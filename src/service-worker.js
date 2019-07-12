@@ -52,16 +52,7 @@ const matchCb = ({url, event}) => {
     return (url.pathname === '/api/createrecipe');
 };
 
-
-const showNotification = () => {
-    self.registration.showNotification('Post Sent', {
-        body: 'You are back online and your post was successfully sent!',
-        icon: "./images/src/assets/notification_icon.png",
-        badge: "./images/src/assets/notification_icon.png"
-    });
-};
-
-const bgSyncPlugin = new workbox.backgroundSync.Plugin('background-sync-queue', {
+const bgSyncPluginPost = new workbox.backgroundSync.Plugin('background-sync-queue-post', {
     maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
     // callbacks: {
     //     queueDidReplay: showNotification
@@ -71,15 +62,31 @@ const bgSyncPlugin = new workbox.backgroundSync.Plugin('background-sync-queue', 
 workbox.routing.registerRoute(
     matchCb,
     workbox.strategies.networkOnly({
-        plugins: [bgSyncPlugin]
+        plugins: [bgSyncPluginPost]
     }),
     'POST'
 );
 
+// const showNotification = () => {
+//     self.registration.showNotification('Post Sent', {
+//         body: 'You are back online and your post was successfully sent!',
+//         icon: "./images/src/assets/notification_icon.png",
+//         badge: "./images/src/assets/notification_icon.png"
+//     });
+// };
+
+
+const bgSyncPluginPut = new workbox.backgroundSync.Plugin('background-sync-queue-put', {
+    maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+    // callbacks: {
+    //     queueDidReplay: showNotification
+    // }
+});
+
 workbox.routing.registerRoute(
-    new RegExp("api\/recipe\/-[^\s]+"),
+    /.*api\/recipes\/-.+/,
     workbox.strategies.networkOnly({
-        plugins: [bgSyncPlugin]
+        plugins: [bgSyncPluginPut]
     }),
     'PUT'
 );
