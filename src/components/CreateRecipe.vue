@@ -2,7 +2,7 @@
     <v-container >
         <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-                <h1 class="primary--text pt-5">Create a new Recipe</h1>
+                <h1 class="primary--text">Create a new Recipe</h1>
             </v-flex>
         </v-layout>
         <v-layout row wrap>
@@ -53,7 +53,7 @@
                                     label="Ingredients*"
                                     v-model.lazy="ingredients"
                                     multiple
-                                    hint="Pick your favorite ingredients"
+                                    hint="Choose your favorite ingredients"
                                     persistent-hint
                                     :rules="[rules.required]"
                             ></v-select>
@@ -111,7 +111,6 @@
                 this.$store.dispatch('createRecipes', postRecipeData)
                     .then(() => {
                         this.buttonLoadingState = false;
-                        // this.$router.push('/recipes');
                     });
             },
             uploadImage() {
@@ -133,9 +132,14 @@
             }
         },
         computed : {
-            buttonLoadingState() {
-                console.log("buttonLoadingState(): ", this.$store.getters);
-                return this.$store.getters.loadingButtonState
+            buttonLoadingState: {
+                get: function() {
+                    console.log("buttonLoadingState(): ", this.$store.getters.loadingButtonState);
+                    return this.$store.getters.loadingButtonState
+                },
+                set: function (value) {
+                    return this.$store.getters.loadingButtonState
+                }
             }
         },
     }

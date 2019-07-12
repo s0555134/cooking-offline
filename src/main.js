@@ -8,12 +8,14 @@ import * as firebase from 'firebase'
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import editRecipe from './components/EditRecipe'
 import './registerServiceWorker'
+import editRecipe from './components/EditRecipe'
+import deleteRecipe from './components/DeleteRecipe'
 
 
 Vue.config.productionTip = false;
 Vue.component('edit-recipe', editRecipe);
+Vue.component('delete-recipe', deleteRecipe);
 
 axios.defaults.baseURL = 'http://localhost:3000/api';
 axios.defaults.headers.common['Accepts'] = 'application/json';

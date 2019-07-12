@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-container class="pt-5">
-            <v-layout class="pt-5">
+        <v-container>
+            <v-layout>
                 <v-flex xs12>
                     <v-btn color="primary" to="/createrecipe">Create a Recipe</v-btn>
                 </v-flex>
@@ -50,7 +50,6 @@
               var swReqistration;
               navigator.serviceWorker.getRegistration()
                   .then(swReq => {
-                      swReq.precacheStaticFiles();
                       swReqistration = swReq;
                       return swReq.pushManager.getSubscription()
                   })

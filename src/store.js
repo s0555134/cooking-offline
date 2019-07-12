@@ -21,7 +21,7 @@ export default new Vuex.Store({
 
         user: null,
 
-        loadingProgress: false,
+        loadingRecipes: false,
         loadingButtonState: false,
         loadingRequest: false,
         error: null,
@@ -55,8 +55,15 @@ export default new Vuex.Store({
                     }
                 }
             }
-            console.log("Store: ", recipe);
-            console.log("Store: ", payload);
+        },
+        removeRecipe: (state, payload) => {
+            let recipe = state.loadedRecipes;
+            for (let index in recipe) {
+                if (recipe[index].id === payload.id) {
+                    console.log("Store-RemoveRecipe: ",recipe[index])
+                    console.log("Store-RemoveRecipes-payload: ", payload);
+                }
+            }
         },
         setUser: (state, payload) => {
             state.user = payload;
@@ -64,8 +71,8 @@ export default new Vuex.Store({
         saveKey: (state, payload) => {
             state.dbKey = payload;
         },
-        setLoading (state, payload) {
-            state.loadingProgress = payload;
+        setLoadingRecipes (state, payload) {
+            state.loadingRecipes = payload;
         },
         setButtonLoading (state, payload) {
             state.loadingButtonState = payload;
@@ -74,7 +81,7 @@ export default new Vuex.Store({
     },
     actions: {
         loadRecipes({ commit, getters }, payload) {
-            commit('setLoading', true);
+            commit('setLoadingRecipes', true);
             axios
                 .get('/recipes')
                 .then(response => {
@@ -92,12 +99,12 @@ export default new Vuex.Store({
                             creatorId: responseData[index].creatorId
                         });
                     }
-                    console.log(response.data);
+                    console.log("Store-loadRecipes(). Response from Server: ", response.data);
                     commit('loadRecipes', resultArrayRecipes);
-                    commit('setLoading', false);
+                    commit('setLoadingRecipes', false);
                 })
                 .catch(function (error) {
-                    commit('setLoading', false);
+                    commit('setLoadingRecipes', false);
                     if (error.response) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
@@ -145,7 +152,7 @@ export default new Vuex.Store({
                     return firebase.storage().ref('recipes/' + key + '.' + extFileName).put(payload.image)
                 })
                 .then(fileData => {
-                  return imageURL = fileData.ref.getDownloadURL()
+                    return imageURL = fileData.ref.getDownloadURL()
                 })
                 .then(imageURL => {
                     console.log("imageURL: ", imageURL);
@@ -180,7 +187,7 @@ export default new Vuex.Store({
                 })
         },
         updateRecipe({commit}, payload) {
-            commit('setLoading', true);
+            commit('setLoadingRecipes', true);
             commit('setButtonLoading', true);
             let editedRecipe = {};
             if (payload.title) {
@@ -196,14 +203,14 @@ export default new Vuex.Store({
                 .put('/recipes/' + payload.id, editedRecipe)
                 .then(response => {
                     commit('updateRecipe', editedRecipe);
-                    commit('setLoading', false);
+                    commit('setLoadingRecipes', false);
                     commit('setButtonLoading', false);
                     commit('setSnackbar', { text:"Your recipe: " + editedRecipe.title + " has been changed.", color:'success', snack:true });
                     router.push('/recipes')
                 })
                 .catch(error => {
                     commit('setButtonLoading', false);
-                    commit('setLoading', false);
+                    commit('setLoadingRecipes', false);
                     commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
                     if (error.response) {
                         // The request was made and the server responded with a status code
@@ -223,6 +230,41 @@ export default new Vuex.Store({
                         console.log('Error', error.message);
                     }
                 })
+        },
+        removeRecipe({commit}, payload) {
+            commit('setLoadingRecipes', true);
+            // commit('setButtonLoading', true);
+            axios
+                .delete('/recipes/' + payload.id)
+                .then(response => {
+                    commit('removeRecipe', response.data.key);
+                    commit('setLoadingRecipes', false);
+                    commit('setSnackbar', { text:"Your recipe has been deleted.", color:'success', snack:true });
+                })
+                .catch(error => {
+                    // commit('setButtonLoading', false);
+                    commit('setLoadingRecipes', false);
+                    commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
+                    if (error.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.log(error.request);
+                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log('Error', error.message);
+                    }
+                })
+
+
         },
         signUserUp({commit}, payload) {
             const user = {
@@ -336,8 +378,8 @@ export default new Vuex.Store({
         loadDialog(state){
             return state.dialog;
         },
-        loading(state) {
-            return state.loadingProgress
+        loadingRecipe(state) {
+            return state.loadingRecipes
         },
         loadingButtonState(state) {
             return state.loadingButtonState

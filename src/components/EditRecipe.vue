@@ -72,9 +72,6 @@
                 itemsIngredients: this.recipe.itemsIngredients
             }
         },
-        mounted() {
-            console.log(this.recipe);
-        },
         methods: {
             saveEdits() {
                 this.$store.dispatch('updateRecipe', {

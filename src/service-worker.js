@@ -77,7 +77,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    /api\/recipe\/-[^\s]+/,
+    new RegExp("api\/recipe\/-[^\s]+"),
     workbox.strategies.networkOnly({
         plugins: [bgSyncPlugin]
     }),
