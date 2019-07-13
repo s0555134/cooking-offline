@@ -66,7 +66,8 @@
             ]),
             loadingDataBeforeRenderingRecipes() {
                 return this.$store.getters.loadingRecipe
-            }
+            },
+
         },
         mounted() {
             console.log("Recipes: ",this.loadRecipes);

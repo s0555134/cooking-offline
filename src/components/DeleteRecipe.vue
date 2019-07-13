@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-layout row>
-            <v-btn color="error" dark @click.stop="dialog = true">
+            <v-btn color="error" dark @click.stop="dialog = true" :loading="buttonLoadingState">
                 Delete Recipe
             </v-btn>
             <v-dialog v-model="dialog" max-width="290">
@@ -32,7 +32,17 @@
                     id: this.recipe.id
                 });
             }
+        },
+        computed: {
+            buttonLoadingState: {
+                get: function() {
+                    console.log("buttonLoadingState(): ", this.$store.getters.loadingButtonState);
+                    return this.$store.getters.loadingButtonState
+                },
+                set: function (value) {
+                    return this.$store.getters.loadingButtonState
+                }
+            }
         }
-
     }
 </script>

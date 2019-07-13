@@ -45,6 +45,12 @@
                         <v-toolbar-title>
                             <router-link to="/" tag="span" style="cursor: pointer">Cook Offline</router-link>
                         </v-toolbar-title>
+                        <v-btn  v-if="onLine" fab dark small color="green">
+                            <v-icon dark>wifi</v-icon>
+                        </v-btn>
+                        <v-btn  v-if="!onLine" fab dark small color="error">
+                            <v-icon dark>wifi_off</v-icon>
+                        </v-btn>
                         <v-spacer></v-spacer>
                         <v-toolbar-items class="hidden-xs-only">
                             <v-btn
@@ -75,6 +81,8 @@
         data () {
             return {
                 drawer: null,
+                onLine: navigator.onLine,
+                showBackOnline: false
             }
         },
         computed: {
@@ -95,13 +103,35 @@
             },
             userIsAuthenticated() {
                 return this.$store.getters.user !== null && this.$store.getters.user !== undefined;
-            }
+            },
         },
         methods: {
             onLogout() {
                 this.$store.dispatch('logout');
                 this.$router.push('/signin');
+            },
+            updateOnlineStatus(e) {
+                const { type } = e;
+                this.onLine = type === 'online';
             }
+        },
+        watch: {
+            onLine(v) {
+                if(v) {
+                    this.showBackOnline = true;
+                    setTimeout(()=>{ this.showBackOnline = false; }, 1000);
+                }
+            }
+        },
+        mounted() {
+            window.addEventListener('online',  this.updateOnlineStatus);
+            window.addEventListener('offline', this.updateOnlineStatus);
+        },
+        beforeDestroy() {
+            window.removeEventListener('online',  this.updateOnlineStatus);
+            window.removeEventListener('offline', this.updateOnlineStatus);
         }
     }
+
 </script>
+

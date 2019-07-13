@@ -47,6 +47,13 @@ workbox.routing.registerRoute(
 
 workbox.routing.registerNavigationRoute('/index.html');
 
+// const showNotification = () => {
+//     self.registration.showNotification('Post Sent', {
+//         body: 'You are back online and your post was successfully sent!',
+//         icon: "./images/src/assets/notification_icon.png",
+//         badge: "./images/src/assets/notification_icon.png"
+//     });
+// };
 
 const matchCb = ({url, event}) => {
     return (url.pathname === '/api/createrecipe');
@@ -67,20 +74,8 @@ workbox.routing.registerRoute(
     'POST'
 );
 
-// const showNotification = () => {
-//     self.registration.showNotification('Post Sent', {
-//         body: 'You are back online and your post was successfully sent!',
-//         icon: "./images/src/assets/notification_icon.png",
-//         badge: "./images/src/assets/notification_icon.png"
-//     });
-// };
-
-
 const bgSyncPluginPut = new workbox.backgroundSync.Plugin('background-sync-queue-put', {
     maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
-    // callbacks: {
-    //     queueDidReplay: showNotification
-    // }
 });
 
 workbox.routing.registerRoute(
@@ -89,6 +84,18 @@ workbox.routing.registerRoute(
         plugins: [bgSyncPluginPut]
     }),
     'PUT'
+);
+
+const bgSyncPluginDelete = new workbox.backgroundSync.Plugin('background-sync-queue-delete', {
+    maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+});
+
+workbox.routing.registerRoute(
+    /.*api\/recipes\/-.+/,
+    workbox.strategies.networkOnly({
+        plugins: [bgSyncPluginDelete]
+    }),
+    'DELETE'
 );
 
 self.addEventListener('notificationclick', event => {
@@ -126,12 +133,12 @@ self.addEventListener('push', event => {
     var data = { title: "Default New", content: "Default new Content"};
 
     if(event.data) {
-        console.log("[SW] data: ", data);
         console.log("[SW] event: ", event);
         console.log("[SW] data.text: ", event.data.text());
 
         data = JSON.parse(event.data.text());
     }
+    console.log("[SW] FinalNotificationData: ", data);
     const options = {
         body: data.content,
         icon: "./images/src/assets/notification_icon.png",

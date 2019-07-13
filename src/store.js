@@ -105,23 +105,8 @@ export default new Vuex.Store({
                 })
                 .catch(function (error) {
                     commit('setLoadingRecipes', false);
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
+                    commit('setSnackbar', { text: "You have no Internet-Connection.", color: 'warning', snack: true });
+                    logError(error)
                 });
         },
         createRecipes({commit, getters}, payload) {
@@ -140,24 +125,13 @@ export default new Vuex.Store({
                 .post('/createrecipe', recipes)
                 .then(response => {
                     dbKey = response.data.key;
-                    commit('setSnackbar', { text: "Recipe was created. ( " + response.data.status + " )", color:'success', snack:true });
-                    console.log("Response from Server for create Recipe: ", response);
+                    commit('setSnackbar', { text: "Recipe successful created. ", color:'success', snack:true });
                     commit('saveKey', dbKey);
                     commit('setButtonLoading', false);
                     return dbKey
                 })
-                .then(key => {
-                    const fileName = payload.image.name;
-                    const extFileName = fileName.slice(fileName.lastIndexOf('.'));
-                    return firebase.storage().ref('recipes/' + key + '.' + extFileName).put(payload.image)
-                })
-                .then(fileData => {
-                    return imageURL = fileData.ref.getDownloadURL()
-                })
-                .then(imageURL => {
-                    console.log("imageURL: ", imageURL);
-                    console.log("dbKey: ", dbKey);
-                    return firebase.database().ref('embedded/recipes').child(dbKey).update(JSON.parse( JSON.stringify({imageURL: imageURL})))
+                .then(dbKey => {
+                   return saveImageOnDB(dbKey, payload, imageURL)
                 })
                 .then(() => {
                     commit('createRecipes', {
@@ -169,21 +143,7 @@ export default new Vuex.Store({
                 .catch(error => {
                     commit('setButtonLoading', false);
                     commit('setSnackbar', { text: "Your Post will be stored and uploaded by Internet-Connection", color: 'warning', snack: true });
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
+                    logError(error)
                 })
         },
         updateRecipe({commit}, payload) {
@@ -212,54 +172,24 @@ export default new Vuex.Store({
                     commit('setButtonLoading', false);
                     commit('setLoadingRecipes', false);
                     commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
+                    logError(error)
                 })
         },
         removeRecipe({commit}, payload) {
-            commit('setLoadingRecipes', true);
+            commit('setButtonLoading', true);
             // commit('setButtonLoading', true);
             axios
                 .delete('/recipes/' + payload.id)
                 .then(response => {
                     commit('removeRecipe', response.data.key);
-                    commit('setLoadingRecipes', false);
+                    commit('setButtonLoading', false);
                     commit('setSnackbar', { text:"Your recipe has been deleted.", color:'success', snack:true });
                 })
                 .catch(error => {
                     // commit('setButtonLoading', false);
-                    commit('setLoadingRecipes', false);
+                    commit('setButtonLoading', false);
                     commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
+                    logError(error)
                 })
 
 
@@ -286,23 +216,7 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: 'Thanks for your registration ' + newUser.displayName + " .", color:'success', snack:true })
                 })
                 .catch(error => {
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
+                    logError(error)
                 })
         },
         signUserIn ({commit}, payload) {
@@ -323,17 +237,7 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: 'Welcome back ' + newUser.displayName, color:'success', snack:true });
                 })
                 .catch(error => {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
-                    } else if (error.request) {
-                        console.log(error.request);
-                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
-                    } else {
-                        console.log('Error', error.message);
-                    }
+                    logError(error)
                 })
         },
         autoSignIn ({commit}, payload) {
@@ -345,17 +249,7 @@ export default new Vuex.Store({
                     commit('setUser', null)
                 })
                 .catch(error => {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        commit('setSnackbar', { text: error.message, color:'error', snack:true });
-                    } else if (error.request) {
-                        console.log(error.request);
-                        commit('setSnackbar', { text: error.request, color:'error', snack:true });
-                    } else {
-                        console.log('Error', error.message);
-                    }
+                    logError(error)
                 })
         }
     },
@@ -384,3 +278,29 @@ export default new Vuex.Store({
         },
     }
 })
+
+function logError(error) {
+    if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+    } else if (error.request) {
+        console.log(error.request);
+    } else {
+        console.log('Error', error.message);
+    }
+}
+
+function saveImageOnDB(dbKey, payload, imageURL) {
+    const fileName = payload.image.name;
+    const extFileName = fileName.slice(fileName.lastIndexOf('.'));
+    return firebase.storage().ref('recipes/' + dbKey + '.' + extFileName).put(payload.image)
+        .then(fileData => {
+            return imageURL = fileData.ref.getDownloadURL()
+        })
+        .then(imageURL => {
+            console.log("imageURL: ", imageURL);
+            console.log("dbKey: ", dbKey);
+            return firebase.database().ref('embedded/recipes').child(dbKey).update(JSON.parse( JSON.stringify({ imageURL: imageURL })))
+        })
+}

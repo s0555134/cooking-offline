@@ -87,6 +87,13 @@
                 }
             }
         },
+        updated() {
+            if (navigator.onLine) {
+                console.log('online');
+            } else {
+                console.log('offline');
+            }
+        },
         methods: {
             submitRecipesToServer(){
                 this.buttonLoadingState = true;
