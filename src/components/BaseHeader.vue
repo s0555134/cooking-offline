@@ -45,12 +45,22 @@
                         <v-toolbar-title>
                             <router-link to="/" tag="span" style="cursor: pointer">Cook Offline</router-link>
                         </v-toolbar-title>
-                        <v-btn  v-if="onLine" fab dark small color="green">
-                            <v-icon dark>wifi</v-icon>
-                        </v-btn>
-                        <v-btn  v-if="!onLine" fab dark small color="error">
-                            <v-icon dark>wifi_off</v-icon>
-                        </v-btn>
+                        <div v-if="onLine" class="pl-2">
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon dark v-on="on">wifi</v-icon>
+                                </template>
+                                <span>Shows your connection</span>
+                            </v-tooltip>
+                        </div>
+                        <div v-if="!onLine" class="pl-2">
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon  dark color="error" v-on="on">wifi_off</v-icon>
+                                </template>
+                                <span>Shows your current connection</span>
+                            </v-tooltip>
+                        </div>
                         <v-spacer></v-spacer>
                         <v-toolbar-items class="hidden-xs-only">
                             <v-btn

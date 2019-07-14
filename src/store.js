@@ -294,12 +294,13 @@ function logError(error) {
 function saveImageOnDB(dbKey, payload, imageURL) {
     const fileName = payload.image.name;
     const extFileName = fileName.slice(fileName.lastIndexOf('.'));
-    return firebase.storage().ref('recipes/' + dbKey + '.' + extFileName).put(payload.image)
+    return firebase.storage().ref('recipes/' + dbKey + extFileName).put(payload.image)
         .then(fileData => {
             return imageURL = fileData.ref.getDownloadURL()
         })
         .then(imageURL => {
             console.log("imageURL: ", imageURL);
+            console.log("extFileName: ", extFileName);
             console.log("dbKey: ", dbKey);
             return firebase.database().ref('embedded/recipes').child(dbKey).update(JSON.parse( JSON.stringify({ imageURL: imageURL })))
         })
