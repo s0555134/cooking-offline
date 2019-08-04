@@ -60,12 +60,12 @@
         },
         data: () => ({
             valid: true,
-            password: 'Buch123!',
+            password: '',
             passwordRules: [
                 v => !!v || 'Password is required',
                 v => (v && v.length > 6) || 'Password must be longer than 6 characters'
             ],
-            email: 'uyanik-abdul@hotmail.de',
+            email: '',
             emailRules: [
                 v => !!v || 'E-mail is required',
                 v => /.+@.+/.test(v) || 'E-mail must be valid'

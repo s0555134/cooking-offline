@@ -118,10 +118,18 @@
                 this.$store.dispatch('createRecipes', postRecipeData)
                     .then(() => {
                         this.buttonLoadingState = false;
+                        this.clearFormInput();
+                        this.resetValidation();
                     });
             },
+            clearFormInput() {
+                this.$refs.form.reset();
+            },
+            resetValidation() {
+                this.$refs.form.resetValidation();
+            },
             uploadImage() {
-                this.$refs.fileInput.click()
+                this.$refs.fileInput.click();
             },
             onFilePicked(event) {
                 const files = event.target.files;
@@ -148,6 +156,6 @@
                     return this.$store.getters.loadingButtonState
                 }
             }
-        },
+        }
     }
 </script>

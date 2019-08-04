@@ -14,7 +14,7 @@
         <v-layout v-if="!recipe" row wrap>
             <v-flex xs12>
                 <h1 class="primary--text">You have no recipes.</h1>
-                <h3 class="primary--text">Do not wait create your own recipe for the community.</h3>
+                <h3 class="primary--text">Do not wait. Create your own recipe for the community.</h3>
             </v-flex>
             <v-flex xs12 class="pt-2">
                 <v-btn color="primary" to="/createrecipe">Create your Recipe</v-btn>
@@ -29,7 +29,7 @@
         <v-layout v-if="!loadingDataBeforeRenderingRecipes" row wrap class="pt-3">
             <v-flex xs12 md9 lg8 px-2 class="align-center">
                 <v-card>
-                    <v-img :src="recipe.imageURL" height="400px"/>
+                    <v-img :src="recipe.imageURL" aspect-ratio="1.5"/>
                     <v-card-title primary-title>
                         <div class="headline">{{ recipe.title }}</div>
                     </v-card-title>

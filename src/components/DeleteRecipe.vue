@@ -30,7 +30,10 @@
             deleteRecipe() {
                 this.$store.dispatch('removeRecipe', {
                     id: this.recipe.id
-                });
+                })
+                    .then(() =>{
+                        this.$router.push('/recipes');
+                    })
             }
         },
         computed: {

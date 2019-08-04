@@ -31,14 +31,14 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    'http://localhost:3000/api/recipes',
+    'https://pwa-server.glitch.me/api/recipes',
     workbox.strategies.staleWhileRevalidate({
         cacheName: 'get-data-Server'
     })
 );
 
 workbox.routing.registerRoute(
-    'http://localhost:3000/api/createrecipe',
+    'https://pwa-server.glitch.me/api/createrecipe',
     workbox.strategies.staleWhileRevalidate({
         cacheName: 'recipes-post'
     })
@@ -109,7 +109,7 @@ self.addEventListener('notificationclick', event => {
         notification.close()
     } else {
         console.log(action);
-        let url = "http://localhost:5000";
+        let url = "https://koch-pwa-db.firebaseapp.com/api/recipes";
         event.waitUntil(
             clients.matchAll()
                 .then(function (clis) {
