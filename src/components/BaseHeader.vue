@@ -2,15 +2,10 @@
     <div>
         <v-container>
             <v-layout>
-                <v-navigation-drawer
-                        v-model="drawer"
-                        absolute
-                        temporary
-                        app
-                >
+                <v-navigation-drawer v-model="drawer" absolute temporary app>
                     <v-list class="pa-1">
                         <v-list-tile-title>
-                            <router-link to="/" tag="span" style="cursor: pointer">Cook Offline</router-link>
+                            <router-link to="/" tag="span" style="cursor: pointer">Cook-Offline</router-link>
                         </v-list-tile-title>
                     </v-list>
                     <v-list dense>
