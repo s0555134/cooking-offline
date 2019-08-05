@@ -53,7 +53,7 @@
                                 <template v-slot:activator="{ on }">
                                     <v-icon  dark color="error" v-on="on">wifi_off</v-icon>
                                 </template>
-                                <span>Shows your current connection</span>
+                                <span>Internet Connection</span>
                             </v-tooltip>
                         </div>
                         <v-spacer></v-spacer>
@@ -100,7 +100,6 @@
                     toolBarItems = [
                         { icon: 'cake', title:'Recipes', link: '/recipes' },
                         { icon: 'local_pizza', title:'My-Recipe', link: '/recipe/' + this.$route.params.id },
-                        { icon: 'category', title:'Categories', link: '/categories' },
                         { icon: 'cloud_upload', title:'Create-Recipe', link: '/createrecipe' },
                     ];
                 }

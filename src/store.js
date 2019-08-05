@@ -125,13 +125,11 @@ export default new Vuex.Store({
                 .post('/createrecipe', recipes)
                 .then(response => {
                     dbKey = response.data.key;
-                    commit('setSnackbar', { text: "Recipe successful created. ", color:'success', snack:true });
+                    console.log("(Store) create Recipe(): dbKEY: ", dbKey);
+                    commit('setSnackbar', { text: "Recipe created. Check it out under Recipes. ", color:'success', snack:true });
                     commit('saveKey', dbKey);
                     commit('setButtonLoading', false);
-                    return dbKey
-                })
-                .then(dbKey => {
-                   return saveImageOnDB(dbKey, payload, imageURL)
+                    return saveImageOnDB(dbKey, payload, imageURL)
                 })
                 .then(() => {
                     commit('createRecipes', {
@@ -144,6 +142,16 @@ export default new Vuex.Store({
                     commit('setButtonLoading', false);
                     commit('setSnackbar', { text: "Your Post will be stored and uploaded by Internet-Connection", color: 'warning', snack: true });
                     logError(error)
+                })
+                .then(() =>{
+                    return saveImageOnDB(dbKey, payload, imageURL)
+                })
+                .then(() => {
+                    commit('createRecipes', {
+                        ...recipes,
+                        imageURL: imageURL,
+                        id: dbKey
+                    });
                 })
         },
         updateRecipe({commit}, payload) {
@@ -216,6 +224,7 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: 'Thanks for your registration ' + newUser.displayName + " .", color:'success', snack:true })
                 })
                 .catch(error => {
+                    commit('setSnackbar', { text: error, color: 'error', snack: true });
                     logError(error)
                 })
         },
@@ -237,6 +246,7 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: 'Welcome back ' + newUser.displayName, color:'success', snack:true });
                 })
                 .catch(error => {
+                    commit('setSnackbar', { text: error, color: 'error', snack: true });
                     logError(error)
                 })
         },
@@ -302,6 +312,9 @@ function saveImageOnDB(dbKey, payload, imageURL) {
             console.log("imageURL: ", imageURL);
             console.log("extFileName: ", extFileName);
             console.log("dbKey: ", dbKey);
-            return firebase.database().ref('embedded/recipes').child(dbKey).update(JSON.parse( JSON.stringify({ imageURL: imageURL })))
+            return firebase.database().ref('embedded/recipes').child(dbKey).update(JSON.parse(JSON.stringify({ imageURL: imageURL })))
+        })
+        .catch(error => {
+            console.log(error)
         })
 }
