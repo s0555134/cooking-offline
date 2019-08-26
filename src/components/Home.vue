@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-container class="pt-5">
-            <v-layout class="pt-5">
+        <v-container>
+            <v-layout>
                 <v-flex xs12>
                     <v-btn color="primary" to="/createrecipe">Create a Recipe</v-btn>
                 </v-flex>
@@ -38,7 +38,6 @@
                     if(result !== "granted") {
                         console.log("No Permission granted by User");
                     } else {
-                        // this.openNotification();
                         this.handlePushSubscription();
                     }
                 })
@@ -50,7 +49,6 @@
               var swReqistration;
               navigator.serviceWorker.getRegistration()
                   .then(swReq => {
-                      swReq.precacheStaticFiles();
                       swReqistration = swReq;
                       return swReq.pushManager.getSubscription()
                   })
@@ -78,12 +76,11 @@
                       console.log(err.message);
                       this.$store.commit('setSnackbar', { text: err.message, color:'warning', snack:true });
                   })
-
             },
             openNotification() {
                 if ("serviceWorker" in navigator) {
                     var options = {
-                        body: "This is the body.",
+                        body: "Cook-Offline",
                         icon: "./images/src/assets/notification_icon.png",
                         image: "./images/src/assets/notification_image.jpg",
                         vibrate: [100, 50, 200],

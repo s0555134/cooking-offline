@@ -2,6 +2,9 @@
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+    devServer: {
+        proxy: 'http://backend.test/',
+    },
     // ...other vue-cli plugin options...
     lintOnSave: false,
     chainWebpack: config => {

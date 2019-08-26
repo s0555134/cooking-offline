@@ -47,21 +47,19 @@ workbox.routing.registerRoute(
 
 workbox.routing.registerNavigationRoute('/index.html');
 
+// const showNotification = () => {
+//     self.registration.showNotification('Post Sent', {
+//         body: 'You are back online and your post was successfully sent!',
+//         icon: "./images/src/assets/notification_icon.png",
+//         badge: "./images/src/assets/notification_icon.png"
+//     });
+// };
 
 const matchCb = ({url, event}) => {
     return (url.pathname === '/api/createrecipe');
 };
 
-
-const showNotification = () => {
-    self.registration.showNotification('Post Sent', {
-        body: 'You are back online and your post was successfully sent!',
-        icon: "./images/src/assets/notification_icon.png",
-        badge: "./images/src/assets/notification_icon.png"
-    });
-};
-
-const bgSyncPlugin = new workbox.backgroundSync.Plugin('background-sync-queue', {
+const bgSyncPluginPost = new workbox.backgroundSync.Plugin('background-sync-queue-post', {
     maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
     // callbacks: {
     //     queueDidReplay: showNotification
@@ -71,34 +69,44 @@ const bgSyncPlugin = new workbox.backgroundSync.Plugin('background-sync-queue', 
 workbox.routing.registerRoute(
     matchCb,
     workbox.strategies.networkOnly({
-        plugins: [bgSyncPlugin]
+        plugins: [bgSyncPluginPost]
     }),
     'POST'
 );
 
+const bgSyncPluginPut = new workbox.backgroundSync.Plugin('background-sync-queue-put', {
+    maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+});
+
 workbox.routing.registerRoute(
-    /api\/recipe\/-[^\s]+/,
+    /.*api\/recipes\/-.+/,
     workbox.strategies.networkOnly({
-        plugins: [bgSyncPlugin]
+        plugins: [bgSyncPluginPut]
     }),
     'PUT'
 );
 
+const bgSyncPluginDelete = new workbox.backgroundSync.Plugin('background-sync-queue-delete', {
+    maxRetentionTime: 24 * 60, // Retry for max of 24 Hours
+});
+
+workbox.routing.registerRoute(
+    /.*api\/recipes\/-.+/,
+    workbox.strategies.networkOnly({
+        plugins: [bgSyncPluginDelete]
+    }),
+    'DELETE'
+);
+
 self.addEventListener('notificationclick', event => {
-    var notification = event.notification;
-    var action = event.action;
-
-    console.log(notification);
-
-    if(action === "confirm") {
-        console.log("Notification confirmed");
-        notification.close()
+    if(event.action === "confirm") {
+        event.notification.close()
     } else {
-        console.log(action);
-        let url = "http://localhost:5000";
+        let url = "http://localhost:5000/recipes";
         event.waitUntil(
             clients.matchAll()
                 .then(function (clis) {
+                    console.log("[SW]:", clis);
                     var client = clis.find(function (c) {
                         return c.visibilityState === "visible";
                     })
@@ -108,7 +116,7 @@ self.addEventListener('notificationclick', event => {
                     } else {
                         clients.openWindow(url)
                     }
-                    notification.close();
+                    event.notification.close();
                 })
         );
     }
@@ -119,12 +127,12 @@ self.addEventListener('push', event => {
     var data = { title: "Default New", content: "Default new Content"};
 
     if(event.data) {
-        console.log("[SW] data: ", data);
         console.log("[SW] event: ", event);
         console.log("[SW] data.text: ", event.data.text());
 
         data = JSON.parse(event.data.text());
     }
+    console.log("[SW] FinalNotificationData: ", data);
     const options = {
         body: data.content,
         icon: "./images/src/assets/notification_icon.png",

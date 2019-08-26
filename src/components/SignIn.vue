@@ -1,27 +1,18 @@
 <template>
     <div>
-        <v-layout class="pt-2">
-            <v-flex xs12>
-                <h1 class="text--primary pt-5">Log in to continue</h1>
-            </v-flex>
-        </v-layout>
         <v-container>
-            <v-layout row class="pt-5">
+            <v-layout class="pt-3">
+                <v-flex xs12 md6 sm4 offset-sm3>
+                    <h1 class="primary--text">Log in to continue</h1>
+                    <router-link to="/signup" tag="span" style="cursor: pointer;  text-decoration: underline;" class="primary--text" >You dont have a account? Click here to Sign-Up!</router-link>
+                </v-flex>
+            </v-layout>
+            <v-layout row class="pt-2">
                 <v-flex xs12 md6 sm4 offset-sm3>
                     <v-card class="elevation-20">
                         <v-card-text>
                             <v-container>
-                                <form @submit.prevent="onSignIn">
-                                    <v-layout row>
-                                        <v-flex xs12>
-                                            <v-text-field
-                                                    v-model.lazy="displayName"
-                                                    :rules="displayNameRules"
-                                                    label="Name"
-                                                    required
-                                            ></v-text-field>
-                                        </v-flex>
-                                    </v-layout>
+                                <form @submit.prevent="onSignIn" lazy-validation>
                                     <v-layout row>
                                         <v-flex xs12>
                                             <v-text-field
@@ -64,23 +55,14 @@
 <script>
 
     export default {
-        name: 'App',
-        components: {
-
-        },
         data: () => ({
             valid: true,
-            displayName: 'Abdul',
-            displayNameRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length > 1) || 'Set your name before continue'
-            ],
-            password: 'Buch123!',
+            password: '',
             passwordRules: [
                 v => !!v || 'Password is required',
-                v => (v && v.length > 6) || 'Password must be longer than 6 characters'
+                v => (v && v.length > 5) || 'Password must be longer than 5 characters'
             ],
-            email: 'uyanik-abdul@hotmail.de',
+            email: '',
             emailRules: [
                 v => !!v || 'E-mail is required',
                 v => /.+@.+/.test(v) || 'E-mail must be valid'
@@ -102,7 +84,7 @@
         },
         methods: {
             onSignIn() {
-                this.$store.dispatch('signUserIn', { displayName: this.displayName, email: this.email, password: this.password });
+                this.$store.dispatch('signUserIn', { email: this.email, password: this.password });
             }
         }
 
