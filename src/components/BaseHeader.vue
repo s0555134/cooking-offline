@@ -104,7 +104,7 @@
                 if (this.userIsAuthenticated) {
                     toolBarItems = [
                         { icon: 'cake', title:'Recipes', link: '/recipes' },
-                        { icon: 'local_pizza', title:'My-Recipe', link: '/recipe/' + this.$route.params.id },
+                        // { icon: 'local_pizza', title:'My-Recipe', link: '/recipe/' + this.$route.params.id },
                         { icon: 'cloud_upload', title:'Create-Recipe', link: '/createrecipe' },
                     ];
                 }
@@ -116,8 +116,10 @@
         },
         methods: {
             onLogout() {
-                this.$store.dispatch('logout');
-                this.$router.push('/signin');
+                this.$store.dispatch('logout')
+                    .then(() => {
+                        this.$router.push('/');
+                    });
             },
             updateOnlineStatus(e) {
                 const { type } = e;

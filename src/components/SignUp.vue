@@ -1,7 +1,12 @@
 <template>
     <div>
        <v-container>
-           <v-layout row class="pt-5">
+           <v-layout class="pt-3">
+               <v-flex xs12 md6 sm4 offset-sm3>
+                   <h1 class="primary--text">Sign-Up to create your own recipe.</h1>
+               </v-flex>
+           </v-layout>
+           <v-layout row class="pt-2">
                <v-flex xs12 sm6 offset-sm3>
                    <v-card class="elevation-20">
                        <v-card-text>

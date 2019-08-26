@@ -143,16 +143,6 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: "Your Post will be stored and uploaded by Internet-Connection", color: 'warning', snack: true });
                     logError(error)
                 })
-                .then(() =>{
-                    return saveImageOnDB(dbKey, payload, imageURL)
-                })
-                .then(() => {
-                    commit('createRecipes', {
-                        ...recipes,
-                        imageURL: imageURL,
-                        id: dbKey
-                    });
-                })
         },
         updateRecipe({commit}, payload) {
             commit('setLoadingRecipes', true);
@@ -199,8 +189,6 @@ export default new Vuex.Store({
                     commit('setSnackbar', { text: "Your changes will be updated, if you got your Internet-Connection back", color: 'warning', snack: true });
                     logError(error)
                 })
-
-
         },
         signUserUp({commit}, payload) {
             const user = {

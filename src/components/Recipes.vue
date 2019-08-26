@@ -2,7 +2,7 @@
     <v-container>
         <v-layout v-if="loadingDataBeforeRenderingRecipes" row wrap>
             <v-flex xs12 md8 lg8 px-2>
-                <div class="text-xs-center">
+                <div class="text-xs-center pt-2">
                     <v-progress-circular
                             :size="50"
                             color="primary"
@@ -15,8 +15,8 @@
             <v-flex xs12 v-if="!loadRecipes || loadRecipes.length <= 0">
                 <h1 class="primary--text">There are no recipes at this moment.</h1>
                 <h3 class="primary--text">Do not wait create your own recipe for the community.</h3>
-                <v-flex xs12 class="pt-2">
-                    <v-btn color="primary" to="/createrecipe">Create your Recipe</v-btn>
+                <v-flex xs12 class="pt-3">
+                    <v-btn id="RecipesCreateRecipe" color="primary" to="/createrecipe">Create your Recipe</v-btn>
                 </v-flex>
             </v-flex>
         </v-layout>
@@ -70,7 +70,7 @@
 
         },
         mounted() {
-            console.log("Recipes: ",this.loadRecipes);
+            // console.log("Recipes: ",this.loadRecipes);
         }
     }
 </script>

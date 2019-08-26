@@ -31,14 +31,14 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    'https://pwa-server.glitch.me/api/recipes',
+    'http://localhost:3000/api/recipes',
     workbox.strategies.staleWhileRevalidate({
         cacheName: 'get-data-Server'
     })
 );
 
 workbox.routing.registerRoute(
-    'https://pwa-server.glitch.me/api/createrecipe',
+    'http://localhost:3000/api/createrecipe',
     workbox.strategies.staleWhileRevalidate({
         cacheName: 'recipes-post'
     })
@@ -99,20 +99,14 @@ workbox.routing.registerRoute(
 );
 
 self.addEventListener('notificationclick', event => {
-    var notification = event.notification;
-    var action = event.action;
-
-    console.log(notification);
-
-    if(action === "confirm") {
-        console.log("Notification confirmed");
-        notification.close()
+    if(event.action === "confirm") {
+        event.notification.close()
     } else {
-        console.log(action);
-        let url = "https://koch-pwa-db.firebaseapp.com/api/recipes";
+        let url = "http://localhost:5000/recipes";
         event.waitUntil(
             clients.matchAll()
                 .then(function (clis) {
+                    console.log("[SW]:", clis);
                     var client = clis.find(function (c) {
                         return c.visibilityState === "visible";
                     })
@@ -122,7 +116,7 @@ self.addEventListener('notificationclick', event => {
                     } else {
                         clients.openWindow(url)
                     }
-                    notification.close();
+                    event.notification.close();
                 })
         );
     }

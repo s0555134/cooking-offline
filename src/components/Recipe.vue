@@ -26,7 +26,7 @@
                 <h1 class="primary--text">My Recipe</h1>
             </v-flex>
         </v-layout>
-        <v-layout v-if="!loadingDataBeforeRenderingRecipes" row wrap class="pt-3">
+        <v-layout v-if="!loadingDataBeforeRenderingRecipes" row wrap class="pt-4">
             <v-flex xs12 md9 lg8 px-2 class="align-center">
                 <v-card>
                     <v-img :src="recipe.imageURL" aspect-ratio="1.5"/>

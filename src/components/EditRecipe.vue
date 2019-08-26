@@ -30,23 +30,6 @@
                                     v-model="editedPreparation"
                             ></v-textarea>
                         </v-flex>
-                        <v-flex xs12 sm6 md6>
-                            <v-autocomplete
-                                    :items="recipe.itemsCategory"
-                                    label="recipe.itemsCategory"
-                                    v-model="itemsCategory"
-                            ></v-autocomplete>
-                        </v-flex>
-                        <v-flex xs12 sm6 md6>
-                            <v-select
-                                    :items="recipe.itemsIngredients"
-                                    label="recipe.itemsIngredients"
-                                    item-text="adwad"
-                                    multiple
-                                    persistent-hint
-                                    v-model="itemsIngredients"
-                            ></v-select>
-                        </v-flex>
                     </v-layout>
                 </v-container>
             </v-card-text>

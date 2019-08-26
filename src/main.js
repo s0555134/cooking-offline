@@ -17,7 +17,7 @@ Vue.config.productionTip = false;
 Vue.component('edit-recipe', editRecipe);
 Vue.component('delete-recipe', deleteRecipe);
 
-axios.defaults.baseURL = 'https://pwa-server.glitch.me/api';
+axios.defaults.baseURL = 'http://localhost:3000/api';
 axios.defaults.headers.common['Accepts'] = 'application/json';
 axios.defaults.timeout = 6000;
 

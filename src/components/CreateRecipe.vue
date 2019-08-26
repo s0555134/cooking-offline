@@ -1,13 +1,13 @@
 <template>
-    <v-container >
-        <v-layout row>
+    <v-container>
+        <v-layout row pt-2>
             <v-flex xs12 sm6 offset-sm3>
                 <h1 class="primary--text">Create a new Recipe</h1>
             </v-flex>
         </v-layout>
         <v-layout row wrap>
             <v-flex xs12 pb-5>
-                <v-form ref="form" @submit.prevent="submitRecipesToServer">
+                <v-form ref="form" @submit.prevent="submitRecipesToServer" lazy-validation>
                     <v-layout row wrap>
                         <v-flex xs12 sm6 offset-sm3>
                             <v-text-field
@@ -59,7 +59,7 @@
                             ></v-select>
                         </v-flex>
                         <v-flex xs12 sm6 offset-sm3 pt-4>
-                            <v-btn color="primary" type="submit" :loading="buttonLoadingState">Save</v-btn>
+                            <v-btn class="CreateRecipeSubmitButton" color="primary" type="submit" :loading="buttonLoadingState">Save</v-btn>
                         </v-flex>
                     </v-layout>
                 </v-form>

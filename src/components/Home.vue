@@ -1,12 +1,12 @@
 <template>
     <div>
         <v-container>
-            <v-layout>
-                <v-flex xs12>
-                    <v-btn color="primary" to="/createrecipe">Create a Recipe</v-btn>
+            <v-layout pt-3>
+                <v-flex xs12 md6 sm4>
+                    <v-btn id="HomeCreateRecipe" color="primary" to="/createrecipe">Create a Recipe</v-btn>
                 </v-flex>
                 <v-flex xs12>
-                    <v-btn color="primary" :disabled="isEnableButton" @click="askForNotification()">Enable-Notifications</v-btn>
+                    <v-btn id="HomeEnableNotifications" color="primary" :disabled="isEnableButton" @click="askForNotification()">Enable-Notifications</v-btn>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -38,7 +38,6 @@
                     if(result !== "granted") {
                         console.log("No Permission granted by User");
                     } else {
-                        // this.openNotification();
                         this.handlePushSubscription();
                     }
                 })
@@ -77,12 +76,11 @@
                       console.log(err.message);
                       this.$store.commit('setSnackbar', { text: err.message, color:'warning', snack:true });
                   })
-
             },
             openNotification() {
                 if ("serviceWorker" in navigator) {
                     var options = {
-                        body: "This is the body.",
+                        body: "Cook-Offline",
                         icon: "./images/src/assets/notification_icon.png",
                         image: "./images/src/assets/notification_image.jpg",
                         vibrate: [100, 50, 200],
