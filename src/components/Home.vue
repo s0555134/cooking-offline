@@ -1,12 +1,12 @@
 <template>
     <div>
         <v-container>
-            <v-layout pt-3>
-                <v-flex xs12 md6 sm4>
-                    <v-btn id="HomeCreateRecipe" color="primary" to="/createrecipe">Create a Recipe</v-btn>
+            <v-layout>
+                <v-flex xs12>
+                    <v-btn color="primary" to="/createrecipe">Create a Recipe</v-btn>
                 </v-flex>
                 <v-flex xs12>
-                    <v-btn id="HomeEnableNotifications" color="primary" :disabled="isEnableButton" @click="askForNotification()">Enable-Notifications</v-btn>
+                    <v-btn color="primary" :disabled="isEnableButton" @click="askForNotification()">Enable-Notifications</v-btn>
                 </v-flex>
             </v-layout>
         </v-container>
