@@ -1,5 +1,10 @@
 # cooking-offline
 
+## Demo
+```
+https://koch-pwa-db.web.app/
+```
+
 ## Install NodeJs to use npm
 ```
 https://nodejs.org/en/download/

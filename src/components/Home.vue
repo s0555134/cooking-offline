@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <v-layout>
+            <v-layout pt-4>
                 <v-flex xs12>
                     <v-btn color="primary" to="/createrecipe">Create a Recipe</v-btn>
                 </v-flex>
