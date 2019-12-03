@@ -45,7 +45,7 @@
                 </v-card>
             </v-flex>
         </v-layout>
-        <v-layout v-if = "!loadingDataBeforeRenderingRecipes && recipe">
+        <v-layout>
             <v-flex xs12>
                 <v-btn color="blue lighten-1" dark to="/recipes">
                     <v-icon dark left>arrow_backwards</v-icon>
