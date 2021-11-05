@@ -1,5 +1,5 @@
 # cooking-offline
-
+Create your own recipes while you are offline.
 ## Demo
 ```
 https://koch-pwa-db.web.app/
